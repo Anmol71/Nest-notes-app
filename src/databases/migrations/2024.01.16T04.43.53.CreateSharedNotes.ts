@@ -35,29 +35,29 @@ export const up: Migration = async ({ context: sequelize }) => {
       field: 'id',
     },
     onDelete: 'cascade',
-    onUpdate: 'cascade',
+    onUpdate: 'no action',
   });
   await sequelize.getQueryInterface().addConstraint('shared_notes', {
     fields: ['shared_from'],
     type: 'foreign key',
-    name: 'users_shared_notes_fkey',
+    // name: 'users_shared_notes_fkey',
     references: {
       table: 'users',
       field: 'id',
     },
     onDelete: 'cascade',
-    onUpdate: 'cascade',
+    onUpdate: 'no action',
   });
   await sequelize.getQueryInterface().addConstraint('shared_notes', {
     fields: ['shared_with'],
     type: 'foreign key',
-    name: 'users_shared_notes_fkey',
+    // name: 'users_shared_notes_fkey',
     references: {
       table: 'users',
       field: 'id',
     },
     onDelete: 'cascade',
-    onUpdate: 'cascade',
+    onUpdate: 'no action',
   });
 };
 

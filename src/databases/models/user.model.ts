@@ -1,13 +1,15 @@
 import {
   Column,
+  HasMany,
   Model,
   NotNull,
   PrimaryKey,
   Table,
   Unique,
 } from 'sequelize-typescript';
+import { NoteModel } from './note.model';
 
-@Table
+@Table({ tableName: 'users' })
 export class UserModel extends Model {
   @NotNull
   @PrimaryKey
@@ -20,4 +22,7 @@ export class UserModel extends Model {
 
   @Column
   password: string;
+
+  @HasMany(() => NoteModel)
+  public notes: NoteModel[];
 }

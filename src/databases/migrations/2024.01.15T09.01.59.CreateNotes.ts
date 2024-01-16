@@ -16,7 +16,7 @@ export const up: Migration = async ({ context: sequelize }) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    body: {
+    description: {
       type: DataTypes.TEXT,
       unique: true,
       allowNull: false,
