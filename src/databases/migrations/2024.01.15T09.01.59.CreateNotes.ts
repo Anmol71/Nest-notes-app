@@ -1,25 +1,28 @@
 import { DataTypes } from 'sequelize';
-import type { Migration } from '../umzug';
+import type { Migration } from '../../umzug';
 
 export const up: Migration = async ({ context: sequelize }) => {
-  await sequelize.getQueryInterface().createTable('users', {
+  await sequelize.getQueryInterface().createTable('notes', {
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true,
     },
-    username: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING,
+    body: {
+      type: DataTypes.TEXT,
       unique: true,
       allowNull: false,
     },
-    password: {
-      type: DataTypes.STRING,
+    hidden: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
     },
 
@@ -34,8 +37,20 @@ export const up: Migration = async ({ context: sequelize }) => {
       allowNull: false,
     },
   });
+
+  await sequelize.getQueryInterface().addConstraint('notes', {
+    fields: ['user_id'],
+    type: 'foreign key',
+    name: 'users_notes_fk',
+    references: {
+      table: 'users',
+      field: 'id',
+    },
+    onDelete: 'cascade',
+    onUpdate: 'no action',
+  });
 };
 
 export const down: Migration = async ({ context: sequelize }) => {
-  await sequelize.getQueryInterface().dropTable('users');
+  await sequelize.getQueryInterface().dropTable('notes');
 };

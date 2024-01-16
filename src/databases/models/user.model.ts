@@ -1,12 +1,22 @@
-import { Column, Model, Table } from 'sequelize-typescript';
+import {
+  Column,
+  Model,
+  NotNull,
+  PrimaryKey,
+  Table,
+  Unique,
+} from 'sequelize-typescript';
 
 @Table
-export class User extends Model {
+export class UserModel extends Model {
+  @NotNull
+  @PrimaryKey
+  @Column({ allowNull: false })
+  id: number;
+
+  @Unique
   @Column
   username: string;
-
-  @Column
-  email: string;
 
   @Column
   password: string;

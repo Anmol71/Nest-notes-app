@@ -1,26 +1,22 @@
 import { DataTypes } from 'sequelize';
-import type { Migration } from '../umzug';
+import type { Migration } from '../../umzug';
 
 export const up: Migration = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable('users', {
-    user_id: {
+    id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    title: {
+    username: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    body: {
-      type: DataTypes.TEXT,
-      unique: true,
       allowNull: false,
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP()'),
@@ -31,18 +27,6 @@ export const up: Migration = async ({ context: sequelize }) => {
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP()'),
       allowNull: false,
     },
-  });
-
-  await sequelize.getQueryInterface().addConstraint('user_profile', {
-    fields: ['user_id'],
-    type: 'foreign key',
-    name: 'users_user_profile_fkey',
-    references: {
-      table: 'users',
-      field: 'id',
-    },
-    onDelete: 'cascade',
-    onUpdate: 'cascade',
   });
 };
 
