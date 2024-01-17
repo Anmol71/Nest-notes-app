@@ -1,4 +1,5 @@
 import {
+  AutoIncrement,
   BelongsTo,
   Column,
   ForeignKey,
@@ -11,7 +12,8 @@ import { UserModel } from './user.model';
 @Table({ tableName: 'notes' })
 export class NoteModel extends Model {
   @PrimaryKey
-  @Column({ allowNull: false })
+  @AutoIncrement
+  @Column
   public id: number;
 
   @ForeignKey(() => UserModel)

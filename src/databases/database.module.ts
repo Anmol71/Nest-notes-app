@@ -12,6 +12,7 @@ import { models } from './models/arrayOfModels';
       password: 'Rubi@123',
       database: 'notes_project',
       models: models,
+      logging: true,
     }),
   ],
 })

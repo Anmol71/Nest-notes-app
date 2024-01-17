@@ -1,10 +1,32 @@
-import { Get, Controller, Render } from '@nestjs/common';
+import { Get, Controller, Render, Post, Res } from '@nestjs/common';
 
 @Controller()
 export class AppController {
-  @Get()
-  @Render('index')
-  root() {
-    return { message: 'Server Running' };
+  @Get('/')
+  @Render('login')
+  index() {
+    return;
+  }
+
+  @Post('/login')
+  login(@Res() res: Response): void {
+    res.redirected('/home');
+  }
+
+  @Get('/home')
+  @Render('home')
+  getHome() {
+    return;
+  }
+
+  @Get('/profile')
+  @Render('profile')
+  getProfile() {
+    return;
+  }
+
+  @Get('/logout')
+  logout(@Res() res: Response): void {
+    res.redirect('/');
   }
 }
