@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { UserModel } from './models/user.model';
+import { models } from './models/arrayOfModels';
 
 @Module({
   imports: [
@@ -11,7 +11,7 @@ import { UserModel } from './models/user.model';
       username: 'blazeanmol',
       password: 'Rubi@123',
       database: 'notes_project',
-      models: [UserModel],
+      models: models,
     }),
   ],
 })
