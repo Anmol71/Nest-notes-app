@@ -56,4 +56,14 @@ export class UsersService {
   //   })
 
   // }
+
+  public isUnique(createUserDto: Pick<UserModel, 'username' | 'password'>) {
+    const username = createUserDto.username;
+    const existingUser = this.userModel.findOne({
+      where: { username: username },
+    });
+    if (existingUser) {
+      return 'This Username is taken.';
+    }
+  }
 }

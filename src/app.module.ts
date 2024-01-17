@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { NotesModule } from './notes/notes.module';
 import { SharedNotesModule } from './shared-notes/shared-notes.module';
 import { DatabaseModule } from './databases/database.module';
+import { Service } from './hash/auth/.service';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { DatabaseModule } from './databases/database.module';
     DatabaseModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, Service],
 })
 export class AppModule {}
