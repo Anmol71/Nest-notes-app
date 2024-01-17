@@ -6,6 +6,10 @@ export const up: Migration = async ({ context: sequelize }) => {
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id',
+      },
     },
     id: {
       type: DataTypes.INTEGER,
