@@ -1,8 +1,8 @@
 import {
+  AutoIncrement,
   Column,
   HasMany,
   Model,
-  NotNull,
   PrimaryKey,
   Table,
   Unique,
@@ -11,9 +11,9 @@ import { NoteModel } from './note.model';
 
 @Table({ tableName: 'users' })
 export class UserModel extends Model {
-  @NotNull
   @PrimaryKey
-  @Column({ allowNull: false })
+  @AutoIncrement
+  @Column
   id: number;
 
   @Unique

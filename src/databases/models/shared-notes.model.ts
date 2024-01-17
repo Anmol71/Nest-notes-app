@@ -1,40 +1,26 @@
-import {
-    BelongsTo,
-  Column,
-  ForeignKey,
-  HasMany,
-  Model,
-  NotNull,
-  Table,
-} from 'sequelize-typescript';
+import { Column, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { UserModel } from './user.model';
 import { NoteModel } from './note.model';
 
 @Table({ tableName: 'shared_notes' })
 export class SharedNoteModel extends Model {
-  @Column
-  @NotNull
   @ForeignKey(() => UserModel)
+  @Column
   public shared_with: number;
 
-  @Column
-  @NotNull
   @ForeignKey(() => UserModel)
+  @Column
   public shared_from: number;
 
-  @Column
-  @NotNull
   @ForeignKey(() => NoteModel)
+  @Column
   public notes_id: number;
 
   @Column
-  @NotNull
   public createdAt: Date;
 
   @Column
-  @NotNull
   public updatedAt?: Date;
 
-  @HasMany(()=> UserModel,'id')
-  
+  // @HasMany(()=> UserModel,'id')
 }

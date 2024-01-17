@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { models } from './models/arrayOfModels';
-
+@Global()
 @Module({
   imports: [
     SequelizeModule.forRoot({

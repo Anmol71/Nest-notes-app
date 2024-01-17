@@ -1,51 +1,39 @@
-import { Injectable } from '@nestjs/common';
-import { NoteModel } from 'src/databases/models/note.model';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+// import { NoteModel } from 'src/databases/models/note.model';
 import { UserModel } from 'src/databases/models/user.model';
 
 @Injectable()
 export class UsersService {
-  // private readonly users = [
-  //   {
-  //     userId: 1,
-  //     username: 'john',
-  //     password: 'changeme',
-  //   },
-  //   {
-  //     userId: 2,
-  //     username: 'maria',
-  //     password: 'guess',
-  //   },
-  // ];
-  async findOne(username: string): Promise<UserModel | undefined> {
-    return this.users.find((user) => user.username === username);
+  constructor(
+    @InjectModel(UserModel)
+    private userModel: typeof UserModel,
+  ) {}
+  //
+  //
+  // async findOne(username: string): Promise<UserModel | undefined> {
+  //   return this.users.find((user) => user.username === username);
+  // }
+
+  findAll() {
+    return this.userModel.findAll();
   }
 
-  // findAll(role?: 'INTERN' | 'ENGINEER' | 'ADMIN') {
-  //   if (role) {
-  //     const rolesArray = this.users.filter((user) => user.role === role);
-  //     if (rolesArray.length) throw new NotFoundException('User Role Not Found');
-  //     return rolesArray;
-  //   }
-  //   return this.users;
-  // }
+  findOne(id: number) {
+    const user = this.userModel.findOne({ where: { id: id } });
+    if (!user) throw new NotFoundException('User Not Found');
 
-  // findOne(id: number) {
-  //   const user = this.users.find((user) => user.userId === id);
+    return user;
+  }
 
-  //   if (!user) throw new NotFoundException('User Not Found');
-
-  //   return user;
-  // }
-
-  // create(createUserDto: UserModel) {
-  //   const usersByHighestId = [...this.users].sort((a, b) => b.id - a.id);
-  //   const newUser = {
-  //     id: usersByHighestId[0].userId + 1,
-  //     ...createUserDto,
-  //   };
-  //   this.users.push(newUser);
-  //   return newUser;
-  // }
+  async create(createUserDto: Pick<UserModel, 'username' | 'password'>) {
+    const username = createUserDto.username;
+    const password = createUserDto.password;
+    return this.userModel
+      .build()
+      .set({ username: username, password: password })
+      .save();
+  }
 
   // update(id: number, updateUserDto: UserModel) {
   //   this.users = this.users.map((user) => {
@@ -58,18 +46,15 @@ export class UsersService {
   //   return this.findOne(id);
   // }
 
-  //   delete(id: number) {
-  //     const removedUser = this.findOne(id);
-
-  //     this.users = this.users.filter((user) => user.id !== id);
-
-  //     return removedUser;
-  //   }
-  public shareNote(sharedWith: number|UserModel , note: number| NoteModel){
-    const userNote = 
-    return this.SharedNoteModel.build().set({
-    note_id:typeof note ==='number'? note:note.id;
-    shared_by:
-    })
+  delete(id: number) {
+    return this.userModel.destroy({ where: { id: id } });
   }
+  // public shareNote(sharedWith: number|UserModel , note: number| NoteModel){
+
+  //   return this.SharedNoteModel.build().set({
+  //   note_id:typeof note ==='number'? note:note.id;
+  //   shared_by:
+  //   })
+
+  // }
 }
