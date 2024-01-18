@@ -1,7 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { SharedNotesService } from './shared-notes.service';
-import { CreateSharedNoteDto } from './dto/create-shared-note.dto';
-import { UpdateSharedNoteDto } from './dto/update-shared-note.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
+import { SharedNotesService } from '../services/shared-notes.service';
+import { CreateSharedNoteDto } from '../dto/create-shared-note.dto';
+import { UpdateSharedNoteDto } from '../dto/update-shared-note.dto';
 
 @Controller('shared-notes')
 export class SharedNotesController {
@@ -23,7 +31,10 @@ export class SharedNotesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSharedNoteDto: UpdateSharedNoteDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateSharedNoteDto: UpdateSharedNoteDto,
+  ) {
     return this.sharedNotesService.update(+id, updateSharedNoteDto);
   }
 

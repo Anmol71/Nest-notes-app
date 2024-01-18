@@ -1,19 +1,16 @@
 import { Global, Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { models } from './models/arrayOfModels';
+import { DbConnectionService } from './services/db-connection.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 @Global()
 @Module({
   imports: [
-    SequelizeModule.forRoot({
-      dialect: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'blazeanmol',
-      password: 'Rubi@123',
-      database: 'notes_project',
-      models: models,
-      logging: true,
+    SequelizeModule.forRootAsync({
+      useClass: DbConnectionService,
+      imports: [ConfigModule],
+      name: 'baseConnection',
     }),
   ],
+  providers: [DbConnectionService, ConfigService],
 })
 export class DatabaseModule {}
