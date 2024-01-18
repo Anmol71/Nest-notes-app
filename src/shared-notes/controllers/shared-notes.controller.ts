@@ -8,8 +8,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { SharedNotesService } from '../services/shared-notes.service';
-import { CreateSharedNoteDto } from '../dto/create-shared-note.dto';
-import { UpdateSharedNoteDto } from '../dto/update-shared-note.dto';
+import { CreateSharedNoteDto } from '../dtos/create-shared-note.dto';
+import { UpdateSharedNoteDto } from '../dtos/update-shared-note.dto';
 
 @Controller('shared-notes')
 export class SharedNotesController {
