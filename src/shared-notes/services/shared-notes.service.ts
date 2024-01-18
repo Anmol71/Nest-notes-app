@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSharedNoteDto } from '../dto/create-shared-note.dto';
-import { UpdateSharedNoteDto } from '../dto/update-shared-note.dto';
+import { CreateSharedNoteDto } from '../dtos/create-shared-note.dto';
+import { UpdateSharedNoteDto } from '../dtos/update-shared-note.dto';
 
 @Injectable()
 export class SharedNotesService {

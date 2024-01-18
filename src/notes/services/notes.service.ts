@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { NoteModel } from 'src/databases/models/note.model';
+import { UserModel } from 'src/databases/models/user.model';
 
 @Injectable()
 export class NotesService {
@@ -9,11 +10,12 @@ export class NotesService {
     private noteModel: typeof NoteModel,
   ) {}
   create(
-    createNote: Pick<NoteModel, 'title' | 'description' | 'user_id' | 'hidden'>,
+    createNote: Pick<NoteModel, 'title' | 'description' | 'hidden'>,
+    user: number | UserModel,
   ) {
     const title = createNote.title;
     const description = createNote.description;
-    const user_id = createNote.user_id;
+    const user_id = typeof user === 'number' ? user : user.id;
     const hidden = createNote.hidden;
     return this.noteModel
       .build()

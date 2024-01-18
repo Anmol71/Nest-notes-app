@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 // import { NoteModel } from 'src/databases/models/note.model';
 import { UserModel } from 'src/databases/models/user.model';
@@ -14,18 +14,24 @@ export class UsersService {
   //   return this.users.find((user) => user.username === username);
   // }
 
-  findAll() {
+  public findAll() {
     return this.userModel.findAll();
   }
 
-  findOne(id: number) {
-    const user = this.userModel.findOne({ where: { id: id } });
-    if (!user) throw new NotFoundException('User Not Found');
-
-    return user;
+  public findOne(id: number) {
+    return this.userModel.findByPk(id, { rejectOnEmpty: true });
   }
 
-  async create(createUserDto: Pick<UserModel, 'username' | 'password'>) {
+  /**
+   *This function find the username in the table
+   * @param username
+   * @returns
+   */
+  public findByUserName(username: string) {
+    return this.userModel.findOne({ where: { username: username } });
+  }
+
+  public async create(createUserDto: Pick<UserModel, 'username' | 'password'>) {
     const username = createUserDto.username;
     const password = createUserDto.password;
     return this.userModel
@@ -45,7 +51,7 @@ export class UsersService {
   //   return this.findOne(id);
   // }
 
-  delete(id: number) {
+  public delete(id: number) {
     return this.userModel.destroy({ where: { id: id } });
   }
   // public shareNote(sharedWith: number|UserModel , note: number| NoteModel){
