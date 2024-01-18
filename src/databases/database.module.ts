@@ -8,7 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     SequelizeModule.forRootAsync({
       useClass: DbConnectionService,
       imports: [ConfigModule],
-      name: 'baseConnection',
+      name: 'default',
     }),
   ],
   providers: [DbConnectionService, ConfigService],

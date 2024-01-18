@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { dbConfig } from './dbConfig';
 
 @Module({
@@ -7,7 +7,10 @@ import { dbConfig } from './dbConfig';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [dbConfig],
+      envFilePath: `${process.cwd()}/.env`,
     }),
   ],
+  providers: [ConfigService],
+  exports: [ConfigService],
 })
 export class EnvConfigModule {}

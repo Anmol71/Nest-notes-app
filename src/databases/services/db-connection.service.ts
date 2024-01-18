@@ -9,13 +9,17 @@ import { models } from '../models/applicationModels';
 @Injectable()
 export class DbConnectionService implements SequelizeOptionsFactory {
   constructor(private configService: ConfigService) {}
-  public createSequelizeOptions() // connectionName?: string,
-  : Promise<SequelizeModuleOptions> | SequelizeModuleOptions {
-    // connectionName = connectionName || 'baseConnection';
-    const config = this.configService.get<SequelizeModuleOptions>('dbConfig');
-    console.log(config);
+  public createSequelizeOptions(
+    connectionName?: string,
+  ): Promise<SequelizeModuleOptions> | SequelizeModuleOptions {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    connectionName = connectionName || 'default';
+    const config =
+      this.configService.get<SequelizeModuleOptions>(`databases.default`);
+    console.log('config', config);
     config.models = models;
     config.dialect = 'mysql';
+    config.name = 'default';
     return config;
   }
 }
