@@ -12,14 +12,15 @@ import { CreateNoteDto } from '../dtos/create-note.dto';
 import { NoteModel } from 'src/databases/models/note.model';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
+import { MapToNotesPipe } from '../pipes/map-to-notes.pipe';
 
+@UseGuards(AuthGuard)
 @Controller('notes')
 export class NotesController {
-  constructor(private readonly notesService: NotesService) {}
+  constructor(private notesService: NotesService) {}
 
-  @UseGuards(AuthGuard)
   @Post()
-  create(
+  public create(
     @AuthUser() user: number,
     @Body() createNote: CreateNoteDto,
   ): Promise<NoteModel> {
@@ -28,14 +29,14 @@ export class NotesController {
   }
 
   @Get()
-  findAll(): Promise<NoteModel[]> {
+  public findAll(): Promise<NoteModel[]> {
     return this.notesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.notesService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.notesService.findOne(+id);
+  // }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateNote: NoteModel) {
@@ -43,7 +44,7 @@ export class NotesController {
   // }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  public remove(@Param('id', MapToNotesPipe) id: string) {
     return this.notesService.remove(+id);
   }
 }

@@ -9,10 +9,11 @@ export class NotesService {
     @InjectModel(NoteModel)
     private noteModel: typeof NoteModel,
   ) {}
-  create(
+
+  public create(
     createNote: Pick<NoteModel, 'title' | 'description' | 'hidden'>,
     user: number | UserModel,
-  ) {
+  ): Promise<NoteModel> {
     const title = createNote.title;
     const description = createNote.description;
     const user_id = typeof user === 'number' ? user : user.id;
@@ -28,19 +29,24 @@ export class NotesService {
       .save();
   }
 
-  findAll() {
+  public findAll(): Promise<NoteModel[]> {
     return this.noteModel.findAll();
   }
 
-  findOne(id: number) {
-    return this.noteModel.findOne({ where: { id: id } });
+  // public findUserId(createNote: Pick<NoteModel, 'user_id'>) {
+  //   const user_id = createNote.user_id;
+  //   return this.noteModel.findOne({ where: { user_id: user_id } });
+  // }
+
+  public find(id: number): Promise<NoteModel> {
+    return this.noteModel.findByPk(id, { rejectOnEmpty: true });
   }
 
   // update(id: number, updateNote: NoteModel) {
   //   return `This action updates a #${id} note`;
   // }
 
-  remove(id: number) {
-    return this.noteModel.destroy({ where: { id: id } });
+  public remove(id: number): Promise<null> {
+    return this.noteModel.destroy({ where: { id: id } }).then(() => null);
   }
 }

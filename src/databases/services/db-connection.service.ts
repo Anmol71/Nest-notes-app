@@ -16,7 +16,6 @@ export class DbConnectionService implements SequelizeOptionsFactory {
     connectionName = connectionName || 'default';
     const config =
       this.configService.get<SequelizeModuleOptions>(`databases.default`);
-    console.log('config', config);
     config.models = models;
     config.dialect = 'mysql';
     config.name = 'default';

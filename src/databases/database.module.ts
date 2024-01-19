@@ -1,8 +1,8 @@
-import { Global, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { DbConnectionService } from './services/db-connection.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-@Global()
+
 @Module({
   imports: [
     SequelizeModule.forRootAsync({

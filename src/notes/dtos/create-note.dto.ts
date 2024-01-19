@@ -3,13 +3,13 @@ import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 export class CreateNoteDto {
   @IsNotEmpty()
   @IsString()
-  title: string;
+  public title: string;
 
   @IsNotEmpty()
   @IsString()
-  description: string;
+  public description: string;
 
   @IsNotEmpty()
   @IsBoolean()
-  hidden: boolean;
+  public hidden: boolean;
 }

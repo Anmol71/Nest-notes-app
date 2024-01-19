@@ -14,11 +14,7 @@ export class AuthService {
   ) {}
 
   public async signIn(username, pass) {
-    console.log(username);
-    console.log('Inside SignIN');
     const user = await this.usersService.findByUserName(username);
-    console.log(user);
-    console.log(await this.usersService.findAll());
     if (!user) {
       throw new NotFoundException();
     }

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-// import { NoteModel } from 'src/databases/models/note.model';
 import { UserModel } from 'src/databases/models/user.model';
 
 @Injectable()
@@ -10,15 +9,11 @@ export class UsersService {
     private userModel: typeof UserModel,
   ) {}
 
-  // async findOne(username: string): Promise<UserModel | undefined> {
-  //   return this.users.find((user) => user.username === username);
-  // }
-
-  public findAll() {
+  public findAll(): Promise<UserModel[]> {
     return this.userModel.findAll();
   }
 
-  public findOne(id: number) {
+  public findOne(id: number): Promise<UserModel> {
     return this.userModel.findByPk(id, { rejectOnEmpty: true });
   }
 
@@ -27,11 +22,13 @@ export class UsersService {
    * @param username
    * @returns
    */
-  public findByUserName(username: string) {
+  public findByUserName(username: string): Promise<UserModel> {
     return this.userModel.findOne({ where: { username: username } });
   }
 
-  public async create(createUserDto: Pick<UserModel, 'username' | 'password'>) {
+  public async create(
+    createUserDto: Pick<UserModel, 'username' | 'password'>,
+  ): Promise<UserModel> {
     const username = createUserDto.username;
     const password = createUserDto.password;
     return this.userModel
@@ -51,8 +48,8 @@ export class UsersService {
   //   return this.findOne(id);
   // }
 
-  public delete(id: number) {
-    return this.userModel.destroy({ where: { id: id } });
+  public delete(id: number): Promise<null> {
+    return this.userModel.destroy({ where: { id: id } }).then(() => null);
   }
   // public shareNote(sharedWith: number|UserModel , note: number| NoteModel){
 
@@ -62,14 +59,4 @@ export class UsersService {
   //   })
 
   // }
-
-  public isUnique(createUserDto: Pick<UserModel, 'username' | 'password'>) {
-    const username = createUserDto.username;
-    const existingUser = this.userModel.findOne({
-      where: { username: username },
-    });
-    if (existingUser) {
-      return 'This Username is taken.';
-    }
-  }
 }

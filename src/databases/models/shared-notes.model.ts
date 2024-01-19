@@ -14,7 +14,7 @@ export class SharedNoteModel extends Model {
 
   @ForeignKey(() => NoteModel)
   @Column
-  public notes_id: number;
+  public note_id: number;
 
   @Column
   public createdAt: Date;
@@ -22,5 +22,9 @@ export class SharedNoteModel extends Model {
   @Column
   public updatedAt?: Date;
 
-  // @HasMany(()=> UserModel,'id')
+  // @HasMany(() => UserModel, 'shared_with')
+  // public shared_with_users: UserModel[];
+
+  // @BelongsTo(() => UserModel, 'shared_from')
+  // public shared_from_user: UserModel;
 }

@@ -1,6 +1,5 @@
 import {
   AutoIncrement,
-  BelongsTo,
   Column,
   ForeignKey,
   Model,
@@ -35,6 +34,6 @@ export class NoteModel extends Model {
   @Column
   updatedAt?: Date;
 
-  @BelongsTo(() => UserModel)
-  public user: UserModel;
+  // @BelongsTo(() => UserModel)
+  // public user: UserModel;
 }

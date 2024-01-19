@@ -11,7 +11,7 @@ export const up: Migration = async ({ context: sequelize }) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    notes_id: {
+    note_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -27,7 +27,7 @@ export const up: Migration = async ({ context: sequelize }) => {
     },
   });
   await sequelize.getQueryInterface().addConstraint('shared_notes', {
-    fields: ['notes_id'],
+    fields: ['note_id'],
     type: 'foreign key',
     name: 'notes_shared_notes_fkey',
     references: {

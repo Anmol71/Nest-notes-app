@@ -6,7 +6,7 @@ export const dbConfig = () => {
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_DATABASE,
-    logging: Boolean(process.env.LOGGING),
+    logging: console.log,
     name: 'default',
   } as IDBConfig;
   return db;
