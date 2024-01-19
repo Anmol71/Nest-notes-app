@@ -1,13 +1,29 @@
 import {
   AutoIncrement,
+  BelongsTo,
   Column,
+  DefaultScope,
   ForeignKey,
   Model,
   PrimaryKey,
+  Scopes,
   Table,
 } from 'sequelize-typescript';
 import { UserModel } from './user.model';
 
+// @DefaultScope(()=> ({
+//   include: UserModel,
+// }))
+@Scopes(() => ({
+  withUser: {
+    include: UserModel,
+  },
+  hidden: {
+    where: {
+      hidden: false,
+    },
+  },
+}))
 @Table({ tableName: 'notes' })
 export class NoteModel extends Model {
   @PrimaryKey
@@ -34,6 +50,6 @@ export class NoteModel extends Model {
   @Column
   updatedAt?: Date;
 
-  // @BelongsTo(() => UserModel)
-  // public user: UserModel;
+  @BelongsTo(() => UserModel)
+  public user: UserModel;
 }

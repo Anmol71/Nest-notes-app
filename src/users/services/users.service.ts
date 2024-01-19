@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { NoteModel } from 'src/databases/models/note.model';
+import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
 import { UserModel } from 'src/databases/models/user.model';
 
 @Injectable()
@@ -10,7 +12,9 @@ export class UsersService {
   ) {}
 
   public findAll(): Promise<UserModel[]> {
-    return this.userModel.findAll();
+    return this.userModel.findAll({
+      include: [NoteModel, { model: SharedNoteModel }],
+    });
   }
 
   public findOne(id: number): Promise<UserModel> {

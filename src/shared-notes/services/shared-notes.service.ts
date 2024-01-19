@@ -19,7 +19,12 @@ export class SharedNotesService {
     const user_id = typeof user === 'number' ? user : user.id;
     return this.sharedNoteModel
       .build()
-      .set({ shared_with: shared_with, notes_id: note_id, user_id: user_id });
+      .set({
+        shared_with: shared_with,
+        note_id: note_id,
+        shared_from: user_id,
+      })
+      .save();
   }
 
   findAll() {

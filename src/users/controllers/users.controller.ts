@@ -11,7 +11,7 @@ import {
 import { UsersService } from '../services/users.service';
 import { CreateUserDto } from '../dtos/create-user.dto';
 
-@Controller()
+@Controller('auth')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

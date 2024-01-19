@@ -30,7 +30,7 @@ export class NotesService {
   }
 
   public findAll(): Promise<NoteModel[]> {
-    return this.noteModel.findAll();
+    return this.noteModel.scope(['withUser']).findAll();
   }
 
   // public findUserId(createNote: Pick<NoteModel, 'user_id'>) {

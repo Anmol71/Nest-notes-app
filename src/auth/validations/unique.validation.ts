@@ -1,5 +1,6 @@
 import {
   registerDecorator,
+  ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
@@ -15,8 +16,8 @@ export class IsUniqueValidator implements ValidatorConstraintInterface {
     return !this.usersService.findByUserName(username);
   }
 
-  public message(value: string) {
-    return `username ${value} already exists`;
+  public defaultMessage(validationArguments?: ValidationArguments) {
+    return `username ${validationArguments.value} already exists`;
   }
 }
 

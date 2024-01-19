@@ -3,6 +3,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
+import { useContainer } from 'class-validator';
 // import * as exphbs from 'express-handlebars';
 
 async function bootstrap() {
@@ -13,6 +14,8 @@ async function bootstrap() {
   // app.set('view engine', '.hbs');
   // app.setViewEngine('hbs');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));

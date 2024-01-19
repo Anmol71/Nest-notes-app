@@ -3,6 +3,12 @@ import type { Migration } from '../../umzug';
 
 export const up: Migration = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable('shared_notes', {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     shared_from: {
       type: DataTypes.INTEGER,
       allowNull: false,

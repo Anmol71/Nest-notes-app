@@ -1,11 +1,14 @@
 import {
   AutoIncrement,
   Column,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
   Unique,
 } from 'sequelize-typescript';
+import { NoteModel } from './note.model';
+import { SharedNoteModel } from './shared-notes.model';
 
 @Table({ tableName: 'users' })
 export class UserModel extends Model {
@@ -21,6 +24,9 @@ export class UserModel extends Model {
   @Column
   password: string;
 
-  // @HasMany(() => NoteModel)
-  // public notes: NoteModel[];
+  @HasMany(() => NoteModel)
+  public notes: NoteModel[];
+
+  @HasMany(() => SharedNoteModel)
+  public sharedNotes: SharedNoteModel[];
 }

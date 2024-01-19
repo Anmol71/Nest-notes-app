@@ -14,7 +14,7 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
 import { MapToNotesPipe } from '../pipes/map-to-notes.pipe';
 
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 @Controller('notes')
 export class NotesController {
   constructor(private notesService: NotesService) {}
@@ -30,6 +30,7 @@ export class NotesController {
 
   @Get()
   public findAll(): Promise<NoteModel[]> {
+    console.log("get")
     return this.notesService.findAll();
   }
 

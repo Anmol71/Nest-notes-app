@@ -1,6 +1,14 @@
-import { Column, ForeignKey, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  ForeignKey,
+  HasMany,
+  Model,
+  Table,
+} from 'sequelize-typescript';
 import { UserModel } from './user.model';
 import { NoteModel } from './note.model';
+
 
 @Table({ tableName: 'shared_notes' })
 export class SharedNoteModel extends Model {
@@ -22,9 +30,9 @@ export class SharedNoteModel extends Model {
   @Column
   public updatedAt?: Date;
 
-  // @HasMany(() => UserModel, 'shared_with')
-  // public shared_with_users: UserModel[];
+  @BelongsTo(() => UserModel, 'shared_with')
+  public shared_with_users: UserModel[];
 
-  // @BelongsTo(() => UserModel, 'shared_from')
-  // public shared_from_user: UserModel;
+  @BelongsTo(() => UserModel, 'shared_from')
+  public shared_from_user: UserModel;
 }
