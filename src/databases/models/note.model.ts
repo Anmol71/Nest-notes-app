@@ -2,7 +2,6 @@ import {
   AutoIncrement,
   BelongsTo,
   Column,
-  DefaultScope,
   ForeignKey,
   Model,
   PrimaryKey,

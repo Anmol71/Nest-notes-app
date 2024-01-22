@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UsePipes, ValidationPipe } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { NoteModel } from 'src/databases/models/note.model';
 import { UserModel } from 'src/databases/models/user.model';
-
+@UsePipes(ValidationPipe)
 @Injectable()
 export class NotesService {
   constructor(

@@ -1,12 +1,16 @@
-import { Injectable, PipeTransform } from '@nestjs/common';
+import { Injectable, NotFoundException, PipeTransform } from '@nestjs/common';
 import { NotesService } from '../services/notes.service';
 import { NoteModel } from 'src/databases/models/note.model';
 
 @Injectable()
-export class MapToNotesPipe implements PipeTransform {
-  constructor(private noteService: NotesService) {}
+export class MapToUserPipe implements PipeTransform {
+  constructor(private notesService: NotesService) {}
 
-  public async transform(id: string): Promise<NoteModel> {
-    return this.noteService.find(Number(id));
+  transform(): Promise<NoteModel> {
+    const notes: Promise<NoteModel> = this.notesService.findAll();
+    if (!notes) {
+      throw new NotFoundException();
+    }
+    return notes;
   }
 }

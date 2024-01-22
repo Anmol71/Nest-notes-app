@@ -14,7 +14,7 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
 import { MapToNotesPipe } from '../pipes/map-to-notes.pipe';
 
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('notes')
 export class NotesController {
   constructor(private notesService: NotesService) {}
@@ -24,13 +24,12 @@ export class NotesController {
     @AuthUser() user: number,
     @Body() createNote: CreateNoteDto,
   ): Promise<NoteModel> {
-    console.log(user);
     return this.notesService.create(createNote, user);
   }
 
   @Get()
   public findAll(): Promise<NoteModel[]> {
-    console.log("get")
+    console.log('get');
     return this.notesService.findAll();
   }
 
