@@ -4,16 +4,18 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { useContainer } from 'class-validator';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // import * as exphbs from 'express-handlebars';
 
 async function bootstrap() {
   // const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
   // const viewsPath = join(__dirname, '../public/views');
   // app.engine('.hbs', exphbs({ extname: '.hbs', defaultLayout: 'main' }));
   // app.set('views', viewsPath);
   // app.set('view engine', '.hbs');
   // app.setViewEngine('hbs');
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
@@ -22,6 +24,15 @@ async function bootstrap() {
   app.setViewEngine('hbs');
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT');
+
+  const config = new DocumentBuilder()
+    .setTitle('API Testing')
+    .setDescription('The API testing description')
+    .setVersion('1.0')
+    .addTag('API')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(port);
 }

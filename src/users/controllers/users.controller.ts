@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
@@ -24,7 +25,7 @@ export class UsersController {
   public findAll() {
     return this.usersService.findAll();
   }
-
+  @UsePipes(new ValidationPipe({ transform: true }))
   @Get(':id')
   public findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);

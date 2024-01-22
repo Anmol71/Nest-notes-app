@@ -3,11 +3,11 @@ import { NotesService } from '../services/notes.service';
 import { NoteModel } from 'src/databases/models/note.model';
 
 @Injectable()
-export class MapToUserPipe implements PipeTransform {
+export class MapToNotesPipe implements PipeTransform {
   constructor(private notesService: NotesService) {}
 
-  transform(): Promise<NoteModel> {
-    const notes: Promise<NoteModel> = this.notesService.findAll();
+  transform(): Promise<NoteModel[]> {
+    const notes: Promise<NoteModel[]> = this.notesService.findAll();
     if (!notes) {
       throw new NotFoundException();
     }

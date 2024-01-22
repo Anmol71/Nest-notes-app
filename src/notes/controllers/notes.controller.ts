@@ -6,13 +6,14 @@ import {
   Param,
   Delete,
   UseGuards,
+  ValidationPipe,
+  UsePipes,
 } from '@nestjs/common';
 import { NotesService } from '../services/notes.service';
 import { CreateNoteDto } from '../dtos/create-note.dto';
 import { NoteModel } from 'src/databases/models/note.model';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
-import { MapToNotesPipe } from '../pipes/map-to-notes.pipe';
 
 @UseGuards(AuthGuard)
 @Controller('notes')
@@ -26,7 +27,7 @@ export class NotesController {
   ): Promise<NoteModel> {
     return this.notesService.create(createNote, user);
   }
-
+  @UsePipes(new ValidationPipe({ transform: true }))
   @Get()
   public findAll(): Promise<NoteModel[]> {
     console.log('get');
@@ -44,7 +45,7 @@ export class NotesController {
   // }
 
   @Delete(':id')
-  public remove(@Param('id', MapToNotesPipe) id: string) {
+  public remove(@Param('id') id: string) {
     return this.notesService.remove(+id);
   }
 }
