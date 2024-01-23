@@ -35,7 +35,7 @@ export class AuthController {
   }
 
   @Render('index')
-  @Get()
+  @Get('login')
   public showLogin() {
     return {};
   }

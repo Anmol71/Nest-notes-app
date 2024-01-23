@@ -5,6 +5,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { useContainer } from 'class-validator';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 // import * as exphbs from 'express-handlebars';
 
 async function bootstrap() {
@@ -18,7 +19,7 @@ async function bootstrap() {
   // app.setViewEngine('hbs');
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-
+  app.use(cookieParser());
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');

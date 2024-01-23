@@ -33,6 +33,7 @@ export class NotesController {
     return this.notesService.create(createNote, user);
   }
   @UsePipes(new ValidationPipe({ transform: true }))
+  @Render('notepad')
   @Get(':id')
   public findAll(@AuthUser() user: number): Promise<NoteModel[]> {
     console.log('get');
