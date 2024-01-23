@@ -17,6 +17,7 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Render('index')
   @Post('register')
   public create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
