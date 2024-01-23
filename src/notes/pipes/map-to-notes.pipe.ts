@@ -7,7 +7,7 @@ export class MapToNotesPipe implements PipeTransform {
   constructor(private notesService: NotesService) {}
 
   transform(): Promise<NoteModel[]> {
-    const notes: Promise<NoteModel[]> = this.notesService.findAll();
+    const notes: Promise<NoteModel[]> = this.notesService.findAllByUser(1);
     if (!notes) {
       throw new NotFoundException();
     }

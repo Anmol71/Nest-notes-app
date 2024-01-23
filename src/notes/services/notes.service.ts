@@ -28,8 +28,11 @@ export class NotesService {
       .save();
   }
 
-  public findAll(): Promise<NoteModel[]> {
-    return this.noteModel.scope(['withUser']).findAll();
+  public findAllByUser(user: number | UserModel): Promise<NoteModel[]> {
+    const user_id = typeof user === 'number' ? user : user.id;
+    return this.noteModel
+      .scope(['withUser'])
+      .findAll({ where: { user_id: user_id } });
   }
 
   // public findUserId(createNote: Pick<NoteModel, 'user_id'>) {

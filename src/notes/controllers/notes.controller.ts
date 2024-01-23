@@ -8,6 +8,7 @@ import {
   UseGuards,
   ValidationPipe,
   UsePipes,
+  Render,
 } from '@nestjs/common';
 import { NotesService } from '../services/notes.service';
 import { CreateNoteDto } from '../dtos/create-note.dto';
@@ -19,7 +20,11 @@ import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
 @Controller('notes')
 export class NotesController {
   constructor(private notesService: NotesService) {}
-
+  @Render('notepad')
+  @Get()
+  public showNotes() {
+    return {};
+  }
   @Post()
   public create(
     @AuthUser() user: number,
@@ -28,10 +33,10 @@ export class NotesController {
     return this.notesService.create(createNote, user);
   }
   @UsePipes(new ValidationPipe({ transform: true }))
-  @Get()
-  public findAll(): Promise<NoteModel[]> {
+  @Get(':id')
+  public findAll(@AuthUser() user: number): Promise<NoteModel[]> {
     console.log('get');
-    return this.notesService.findAll();
+    return this.notesService.findAllByUser(user);
   }
 
   // @Get(':id')
