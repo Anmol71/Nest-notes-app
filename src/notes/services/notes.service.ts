@@ -35,6 +35,15 @@ export class NotesService {
       .findAll({ where: { user_id: user_id } });
   }
 
+  public async getMyNotes(user_id: number): Promise<NoteModel[]> {
+    return await this.noteModel.findAll({
+      where: {
+        user_id: user_id,
+      },
+      raw: true,
+    });
+  }
+
   // public findUserId(createNote: Pick<NoteModel, 'user_id'>) {
   //   const user_id = createNote.user_id;
   //   return this.noteModel.findOne({ where: { user_id: user_id } });

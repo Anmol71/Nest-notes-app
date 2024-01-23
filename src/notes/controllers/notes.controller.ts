@@ -15,11 +15,20 @@ import { CreateNoteDto } from '../dtos/create-note.dto';
 import { NoteModel } from 'src/databases/models/note.model';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
+import { UserModel } from 'src/databases/models/user.model';
 
 @UseGuards(AuthGuard)
 @Controller('notes')
 export class NotesController {
   constructor(private notesService: NotesService) {}
+
+  @Render('notes')
+  @Get()
+  public async showNotesPage(@AuthUser() authUser: UserModel) {
+    const myNotes = await this.notesService.getMyNotes(authUser.id);
+    console.log(myNotes);
+    return { a: myNotes };
+  }
   @Render('notepad')
   @Get()
   public showNotes() {
