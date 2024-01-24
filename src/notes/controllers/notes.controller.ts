@@ -6,9 +6,13 @@ import {
   Param,
   Delete,
   UseGuards,
+  Render,
+  Put,
+  HttpCode,
+  HttpStatus,
   ValidationPipe,
   UsePipes,
-  Render,
+  Redirect,
 } from '@nestjs/common';
 import { NotesService } from '../services/notes.service';
 import { CreateNoteDto } from '../dtos/create-note.dto';
@@ -24,25 +28,26 @@ export class NotesController {
 
   @Render('notes')
   @Get()
-  public async showNotesPage(@AuthUser() authUser: UserModel) {
-    const myNotes = await this.notesService.getMyNotes(authUser.id);
-    console.log(myNotes);
-    return { a: myNotes };
+  public async getMyNotes(@AuthUser() userId: number) {
+    const notes = await this.notesService.getMyNotes(userId);
+    console.log(notes);
+    return { notes };
   }
+
   @Render('notepad')
-  @Get()
-  public showNotes() {
+  @Get('create')
+  public showCreateNote() {
     return {};
   }
+
   @Post()
-  public create(
-    @AuthUser() user: number,
-    @Body() createNote: CreateNoteDto,
-  ): Promise<NoteModel> {
-    return this.notesService.create(createNote, user);
+  @Redirect('/notes')
+  public create(@AuthUser() user: number, @Body() createNote: CreateNoteDto) {
+    this.notesService.create(createNote, user);
   }
-  @UsePipes(new ValidationPipe({ transform: true }))
-  @Render('notepad')
+
+  // @UsePipes(new ValidationPipe({ transform: true }))
+  // @Render('notepad')
   @Get(':id')
   public findAll(@AuthUser() user: number): Promise<NoteModel[]> {
     console.log('get');
@@ -54,13 +59,29 @@ export class NotesController {
   //   return this.notesService.findOne(+id);
   // }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateNote: NoteModel) {
-  //   return this.notesService.update(+id, updateNote);
-  // }
+  @Put()
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(ValidationPipe)
+  // @Redirect('notes')
+  public async editNote(
+    @Body('id') id: number,
+    @Body() createNoteDto: CreateNoteDto,
+    @AuthUser() authUser: UserModel,
+  ): Promise<any> {
+    await this.notesService.deleteNote(authUser.id, id);
+    return this.notesService.create(createNoteDto, authUser.id);
+  }
 
   @Delete(':id')
   public remove(@Param('id') id: string) {
     return this.notesService.remove(+id);
+  }
+
+  @Delete()
+  public deleteNote(
+    @Body('id') id: number,
+    @AuthUser() userId: number,
+  ): Promise<any> {
+    return this.notesService.deleteNote(userId, id);
   }
 }

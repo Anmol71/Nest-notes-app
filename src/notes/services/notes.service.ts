@@ -35,8 +35,10 @@ export class NotesService {
       .findAll({ where: { user_id: user_id } });
   }
 
-  public async getMyNotes(user_id: number): Promise<NoteModel[]> {
-    return await this.noteModel.findAll({
+  public getMyNotes(user: number | UserModel): Promise<NoteModel[]> {
+    const user_id = typeof user === 'number' ? user : user.id;
+    console.log('User Id ', user_id);
+    return this.noteModel.findAll({
       where: {
         user_id: user_id,
       },
@@ -59,5 +61,18 @@ export class NotesService {
 
   public remove(id: number): Promise<null> {
     return this.noteModel.destroy({ where: { id: id } }).then(() => null);
+  }
+
+  public async deleteNote(
+    user: number | UserModel,
+    id: number,
+  ): Promise<number> {
+    const user_id = typeof user === 'number' ? user : user.id;
+    return this.noteModel.destroy({
+      where: {
+        user_id: user_id,
+        id: id,
+      },
+    });
   }
 }

@@ -5,7 +5,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Redirect,
   Render,
   Res,
   ValidationPipe,
@@ -19,7 +18,8 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
-  @Redirect('/notes')
+  // @Redirect('/notepad')
+  @Render('notepad')
   @Post('login')
   public async signIn(
     @Body(ValidationPipe) signInDto: LoginUserDto,
