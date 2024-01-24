@@ -71,7 +71,7 @@ export class NotesController {
     await this.notesService.deleteNote(authUser.id, id);
     return this.notesService.create(createNoteDto, authUser.id);
   }
-
+  @Redirect('/notes')
   @Delete(':id')
   public remove(@Param('id') id: string) {
     return this.notesService.remove(+id);

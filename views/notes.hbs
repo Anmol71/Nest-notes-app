@@ -11,15 +11,13 @@
       #textArea { width: 98%; margin-left: 12px; font-family: system-ui,
       -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
       Cantarell, "Open Sans", "Helvetica Neue", sans-serif; } li { cursor:
-      pointer; } 
-      background-size: cover; background-repeat: no-repeat; } .top { margin-top:
-      58px; }
-      
+      pointer; } background-size: cover; background-repeat: no-repeat; } .top {
+      margin-top: 58px; }
 
     </style>
   </head>
   <body>
-    <nav class='navbar navbar-expand-lg bg-body-tertiary '>
+    <nav class='navbar navbar-expand-lg bg-body-tertiary'>
       <div class='container-fluid'>
         <a class='navbar-brand' href='#'>TextMate</a>
         <button
@@ -39,47 +37,60 @@
             <li class='nav-item mx-3' onclick='handleDownClick()'>Lower</li>
             <li class='nav-item mx-3' onclick='handleCapText()'>Captalize</li>
             <li class='nav-item mx-3' onclick='handleClearText()'>Clear</li>
-            <a class='text-decoration-none text-primary mx-5' href='/notes/create'>Create Notes</a>
+            <a
+              class='text-decoration-none text-primary mx-5'
+              href='/notes/create'
+            >Create Notes</a>
           </ul>
         </div>
       </div>
     </nav>
 
-    <form action='/notes' method='POST'>
-      {{#each notes}}
-        {{! <input type='hidden' name='_method' value='DELETE' /> }}
-        <label for='Id'>Id</label>
-        <input type="hidden" name='id' value='{{this.id}}' />
-        {{!-- <td scope='row'> --}}
-          <input
-          class="col-xs-2"
-            type='text'
-            class='form-control'
-            value='{{this.id}}'
-            readonly
-          />
-        {{!-- </td> --}}
-        {{!-- <td> --}}
-        <label for='Title'>Title</label>
-          <input
-            type='text'
-            class='form-control'
-            value='{{this.title}}'
-            readonly
-          />
+    {{! <form action='/notes' method='POST'> }}
+    <table class='table table-bordered table-dark table-striped'>
+      <thead>
+        <tr>
+          <th scope='col'>Id</th>
+          <th scope='col'>Title</th>    
+          <th scope='col'>Content</th>
+          <th></th>
+          {{! <th scope="col"></th> }}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each notes}}
+          <tr>
+            <th scope='row'>{{this.id}}</th>
+            <td>{{this.title}}</td>
+            <td>{{this.description}}</td>
+            <td>
+              <form action='/notes/{{this.id}}' method='post'>
+                <input type="hidden" name="_method" value="DELETE">
+                <input type="hidden" name="id" value="{{this.id}}">
+                <button>Delete</button>
+              </form>
+              {{!-- <form action='' method='post'>
+                <input type="hidden" name="_method" value="delete">
 
-        {{!-- </td> --}}
-        {{!-- <td > --}}
-        <label for='Content'>Content</label>
-          <input
-            type='text'
-            class='form-control'
-            value='{{this.description}}'
-            readonly
-          />
+                <button>Delete</button>
+              </form>
+              <form action='' method='post'>
+                <input type="hidden" name="_method" value="delete">
 
-        </td>
-      {{/each}}
-    </form>
+                <button>Delete</button>
+              </form> --}}
+            </td>
+          </tr>
+          {{! <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+    </tr> }}
+        {{/each}}
+      </tbody>
+    </table>
+    {{! </form> }}
   </body>
 </html>
