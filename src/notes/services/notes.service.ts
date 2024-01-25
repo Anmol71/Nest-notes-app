@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { NoteModel } from 'src/databases/models/note.model';
 import { UserModel } from 'src/databases/models/user.model';
+import { SharedNotesService } from 'src/shared-notes/services/shared-notes.service';
 @Injectable()
 export class NotesService {
   constructor(
     @InjectModel(NoteModel)
     private noteModel: typeof NoteModel,
+    private sharedNotesService: SharedNotesService,
   ) {}
 
   public create(
@@ -82,4 +84,11 @@ export class NotesService {
       },
     });
   }
+
+  // public sharedWithSingleUser(note: NoteModel , user: number | UserModel,){
+  //   const note_id = note.id;
+  //   const user_id = typeof user === 'number' ? user: user.id;
+  //   return this..build().set({
+  //   })
+  // }
 }

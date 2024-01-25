@@ -8,5 +8,6 @@ import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
   imports: [SequelizeModule.forFeature([SharedNoteModel])],
   controllers: [SharedNotesController],
   providers: [SharedNotesService],
+  exports: [SharedNotesService],
 })
 export class SharedNotesModule {}

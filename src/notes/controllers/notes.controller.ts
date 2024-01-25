@@ -22,6 +22,8 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
 import { MapToNotesPipe } from '../pipes/map-to-notes.pipe';
 import { UsersService } from 'src/users/services/users.service';
+import { CreateSharedNoteDto } from 'src/shared-notes/dtos/create-shared-note.dto';
+import { SharedNotesService } from 'src/shared-notes/services/shared-notes.service';
 
 @UseGuards(AuthGuard)
 @Controller('notes')
@@ -29,6 +31,7 @@ export class NotesController {
   constructor(
     private notesService: NotesService,
     private usersService: UsersService,
+    private sharedNotesService: SharedNotesService,
   ) {}
 
   @Render('notes')
@@ -38,13 +41,16 @@ export class NotesController {
     console.log(notes);
     return { notes };
   }
-  @Get('share')
+  @Get(':noteId/share')
   // @Redirect('/users')
   @Render('usersList')
-  public async findAllUsers() {
+  public async shareWithUsers(
+    @Param('noteId', ParseIntPipe, MapToNotesPipe) note: NoteModel,
+  ) {
     const users = await this.usersService.findAll();
-    console.log('Find All', users, 'Users');
-    return { users };
+    console.log({ users, note: note.toJSON() }, 'notesadewfefrfrf');
+    // console.log('Find All', users, 'Users');
+    return { users, note: note.toJSON() };
   }
 
   @Render('createNotes')
@@ -66,21 +72,23 @@ export class NotesController {
   }
 
   // ROUTE FOR SHARING THE NOTE.
-  @Post(':id/share')
-  // @Redirect
+  @Post(':noteId/share')
+  @Redirect('/notes')
+  public sharedWithSingleUser(
+    @Param('noteId', ParseIntPipe, MapToNotesPipe) note: NoteModel,
+    @AuthUser() userId: number,
+    @Body() sharedNoteDto: CreateSharedNoteDto,
+  ) {
+    console.log('CreateSharedNoteDto', sharedNoteDto);
+    console.log('NOteId/Share.....');
+    this.sharedNotesService.create(sharedNoteDto, userId, note);
+  }
 
-  // @UsePipes(new ValidationPipe({ transform: true }))
-  // @Render('notepad')
   @Get(':id')
   public findAll(@AuthUser() user: number): Promise<NoteModel[]> {
     console.log('get');
     return this.notesService.findAllByUser(user);
   }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.notesService.findOne(+id);
-  // }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)

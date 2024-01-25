@@ -6,7 +6,8 @@ import { NoteModel } from 'src/databases/models/note.model';
 export class MapToNotesPipe implements PipeTransform {
   constructor(private notesService: NotesService) {}
 
-  async transform(id: number): Promise<NoteModel> {
+  public async transform(id: number): Promise<NoteModel> {
+    console.log('Map to notes pipe');
     const note: NoteModel = await this.notesService.findOne(id);
     if (!note) {
       throw new NotFoundException();

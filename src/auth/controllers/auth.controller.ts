@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Redirect,
   Render,
   Res,
   ValidationPipe,
@@ -32,6 +33,11 @@ export class AuthController {
     response.cookie('Authorization', token);
     // response.redirect('/notes');
     return;
+  }
+  @Post('logout')
+  @Redirect('/auth/login')
+  public async signOut(@Res({ passthrough: true }) response: Response) {
+    response.cookie('Authorization', '');
   }
 
   @Render('index')

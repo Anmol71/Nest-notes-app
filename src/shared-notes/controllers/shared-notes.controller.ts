@@ -13,17 +13,17 @@ import { CreateSharedNoteDto } from '../dtos/create-shared-note.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
 
+@UseGuards(AuthGuard)
 @Controller('shared-notes')
 export class SharedNotesController {
   constructor(private readonly sharedNotesService: SharedNotesService) {}
-  @UseGuards(AuthGuard)
-  @Post()
-  create(
-    @AuthUser() user: number,
-    @Body() createSharedNoteDto: CreateSharedNoteDto,
-  ) {
-    return this.sharedNotesService.create(createSharedNoteDto, user);
-  }
+  // @Post()
+  // create(
+  //   @AuthUser() user: number,
+  //   @Body() createSharedNoteDto: CreateSharedNoteDto,
+  // ) {
+  //   return this.sharedNotesService.create(createSharedNoteDto, user);
+  // }
 
   @Get()
   findAll() {

@@ -23,7 +23,7 @@
     </style>
   </head>
   <body>
-    <nav class='navbar navbar-expand-lg bg-body-tertiary mx-1'>
+    <nav class='navbar navbar-expand-lg bg-body-tertiary '>
       <div class='container-fluid'>
         <a class='navbar-brand' href='#'>TextMate</a>
         <button
@@ -45,6 +45,9 @@
             <li class='nav-item mx-3' onclick='handleClearText()'>Clear</li>
             <a class='text-decoration-none text-primary mx-5' href='/notes'>Saved Notes</a>
           </ul>
+            <form action="/auth/logout" method="post">
+              <input type="submit" class="btn btn-secondary " value="Log Out">
+            </form>
         </div>
       </div>
     </nav>
