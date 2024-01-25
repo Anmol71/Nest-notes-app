@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Redirect,
   Render,
   UsePipes,
   ValidationPipe,
@@ -30,7 +31,10 @@ export class UsersController {
   }
 
   @Get()
+  @Redirect('/users')
+  // @Render('usersList')
   public findAll() {
+    console.log('Find All');
     return this.usersService.findAll();
   }
   @UsePipes(new ValidationPipe({ transform: true }))

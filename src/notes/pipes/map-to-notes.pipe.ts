@@ -6,11 +6,11 @@ import { NoteModel } from 'src/databases/models/note.model';
 export class MapToNotesPipe implements PipeTransform {
   constructor(private notesService: NotesService) {}
 
-  transform(): Promise<NoteModel[]> {
-    const notes: Promise<NoteModel[]> = this.notesService.findAllByUser(1);
-    if (!notes) {
+  async transform(id: number): Promise<NoteModel> {
+    const note: NoteModel = await this.notesService.findOne(id);
+    if (!note) {
       throw new NotFoundException();
     }
-    return notes;
+    return note;
   }
 }

@@ -13,18 +13,23 @@ import {
   ValidationPipe,
   UsePipes,
   Redirect,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { NotesService } from '../services/notes.service';
 import { CreateNoteDto } from '../dtos/create-note.dto';
 import { NoteModel } from 'src/databases/models/note.model';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
-import { UserModel } from 'src/databases/models/user.model';
+import { MapToNotesPipe } from '../pipes/map-to-notes.pipe';
+import { UsersService } from 'src/users/services/users.service';
 
 @UseGuards(AuthGuard)
 @Controller('notes')
 export class NotesController {
-  constructor(private notesService: NotesService) {}
+  constructor(
+    private notesService: NotesService,
+    private usersService: UsersService,
+  ) {}
 
   @Render('notes')
   @Get()
@@ -33,11 +38,25 @@ export class NotesController {
     console.log(notes);
     return { notes };
   }
+  @Get('share')
+  // @Redirect('/users')
+  @Render('usersList')
+  public async findAllUsers() {
+    const users = await this.usersService.findAll();
+    console.log('Find All', users, 'Users');
+    return { users };
+  }
 
-  @Render('notepad')
+  @Render('createNotes')
   @Get('create')
   public showCreateNote() {
     return {};
+  }
+
+  @Get(':id/edit')
+  @Render('editNotes')
+  public Note(@Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel) {
+    return { note };
   }
 
   @Post()
@@ -45,6 +64,10 @@ export class NotesController {
   public create(@AuthUser() user: number, @Body() createNote: CreateNoteDto) {
     this.notesService.create(createNote, user);
   }
+
+  // ROUTE FOR SHARING THE NOTE.
+  @Post(':id/share')
+  // @Redirect
 
   // @UsePipes(new ValidationPipe({ transform: true }))
   // @Render('notepad')
@@ -59,29 +82,19 @@ export class NotesController {
   //   return this.notesService.findOne(+id);
   // }
 
-  @Put()
+  @Put(':id')
   @HttpCode(HttpStatus.OK)
   @UsePipes(ValidationPipe)
-  // @Redirect('notes')
-  public async editNote(
-    @Body('id') id: number,
+  @Redirect('/notes')
+  public editNote(
+    @Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel,
     @Body() createNoteDto: CreateNoteDto,
-    @AuthUser() authUser: UserModel,
-  ): Promise<any> {
-    await this.notesService.deleteNote(authUser.id, id);
-    return this.notesService.create(createNoteDto, authUser.id);
+  ) {
+    return this.notesService.update(note, createNoteDto);
   }
   @Redirect('/notes')
   @Delete(':id')
-  public remove(@Param('id') id: string) {
-    return this.notesService.remove(+id);
-  }
-
-  @Delete()
-  public deleteNote(
-    @Body('id') id: number,
-    @AuthUser() userId: number,
-  ): Promise<any> {
-    return this.notesService.deleteNote(userId, id);
+  public remove(@Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel) {
+    return this.notesService.remove(note);
   }
 }

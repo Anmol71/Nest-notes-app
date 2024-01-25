@@ -19,7 +19,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   // @Redirect('/notepad')
-  @Render('notepad')
+  @Render('createNotes')
   @Post('login')
   public async signIn(
     @Body(ValidationPipe) signInDto: LoginUserDto,

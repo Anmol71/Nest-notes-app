@@ -48,21 +48,22 @@
         </div>
       </div>
     </nav>
+    <center><h2>Create Notes Here</h2></center>
     {{! <span class="mx-4" id="fileName">No file opened </span> }}
     <form action='/notes' method='post'>
       <div class='my-3 mx-3'>
         <label for='Title'>Title</label>
-        <input type='text' class='form-control' id='title' name='title' />
+        <input type='text' class='form-control' id='title' name='title' value="{{this.note.title}}"/>
       </div>
       <label class='mx-3' for='Description'>Description</label>
       <textarea
         class='form-control form-control-lg'
-        name='description'
+        name='description'        
         id='textArea'
         cols='20'
         rows='10'
         placeholder='Write your notes here'
-      ></textarea>
+      >{{this.note.description}}</textarea>
       <div class='form-check text-start my-3 mx-3'>
         <input
           class='form-check-input'
@@ -76,11 +77,11 @@
       </div>
       <button class='btn btn-secondary my-2 mx-3'>Save</button>
     </form>
-    <form action='/notes/'></form>
+    {{!-- <form action='/notes/'></form>
     <form action='/shared_notes' method='post'>
       <button class='btn btn-secondary mx-3'>Share</button>
 
-    </form>
+    </form> --}}
       {{! <div class="border p-5">
         <div style="float: right;">
 

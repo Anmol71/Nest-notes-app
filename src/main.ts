@@ -6,10 +6,6 @@ import { ConfigService } from '@nestjs/config';
 import { useContainer } from 'class-validator';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
-import * as methodOverride from 'method-override';
-import bodyParser from 'body-parser';
-import { NextFunction, Request, Response } from 'express';
-// import * as exphbs from 'express-handlebars';
 
 async function bootstrap() {
   // const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -28,29 +24,6 @@ async function bootstrap() {
   app.setViewEngine('hbs');
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT');
-  // app.use(bodyParser.urlencoded());
-  // app.use(
-  //   methodOverride(function (req , ,next) {
-  //     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
-  //       // look in urlencoded POST bodies and delete it
-  //       const method = req.body._method;
-  //       console.log(method, req.body._method);
-
-  //       console.log(req.method,"jme");
-  //       delete req.body._method;
-
-  //     }
-  //   }),
-  // );
-
-  app.use((req: Request, res: Response, next: NextFunction) => {
-    console.log('log!!!!!');
-    console.log(req.method, 'method');
-    req.method = req.body._method;
-
-    console.log(req, "bodxy")
-    next();
-  });
 
   const config = new DocumentBuilder()
     .setTitle('API Testing')

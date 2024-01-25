@@ -51,16 +51,23 @@ export class NotesService {
   //   return this.noteModel.findOne({ where: { user_id: user_id } });
   // }
 
-  public find(id: number): Promise<NoteModel> {
+  public findOrFail(id: number): Promise<NoteModel> {
     return this.noteModel.findByPk(id, { rejectOnEmpty: true });
   }
 
-  // update(id: number, updateNote: NoteModel) {
-  //   return `This action updates a #${id} note`;
-  // }
+  public findOne(id: number){
+    return this.noteModel.findByPk(id);
+  }
 
-  public remove(id: number): Promise<null> {
-    return this.noteModel.destroy({ where: { id: id } }).then(() => null);
+  public update(
+    note: NoteModel,
+    updateNote: Pick<NoteModel, 'title' | 'description'>,
+  ) {
+    return note.set(updateNote).save();
+  }
+
+  public remove(note: NoteModel): Promise<void> {
+    return note.destroy();
   }
 
   public async deleteNote(
