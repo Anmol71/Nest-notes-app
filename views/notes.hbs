@@ -1,0 +1,107 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <link
+      rel='stylesheet'
+      href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css'
+    />
+    <title>Saved Notes</title>
+    <style>
+      #textArea { width: 98%; margin-left: 12px; font-family: system-ui,
+      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+      Cantarell, "Open Sans", "Helvetica Neue", sans-serif; } li { cursor:
+      pointer; } background-size: cover; background-repeat: no-repeat; } .top {
+      margin-top: 58px; }
+
+    </style>
+  </head>
+  <body>
+    <nav class='navbar navbar-expand-lg bg-body-tertiary'>
+      <div class='container-fluid'>
+        <a class='navbar-brand' href='#'>TextMate</a>
+        <button
+          class='navbar-toggler'
+          type='button'
+          data-bs-toggle='collapse'
+          data-bs-target='#navbarSupportedContent'
+          aria-controls='navbarSupportedContent'
+          aria-expanded='false'
+          aria-label='Toggle navigation'
+        >
+          <span class='navbar-toggler-icon'></span>
+        </button>
+        <div class='collapse navbar-collapse' id='navbarSupportedContent'>          
+            <a
+              class='text-decoration-none text-primary mx-3 '
+              href='/notes/create'
+            >Create Notes</a>
+          </ul>
+           <form action="/auth/logout" method="post">
+              <input type="submit" class="btn btn-secondary end-0 top-0 position-absolute mx-3" value="Log Out">
+            </form>
+        </div>
+      </div>
+
+    </nav>
+
+    {{! <form action='/notes' method='POST'> }}
+    <table class='table table-bordered table-dark table-striped'>
+      <thead>
+        <tr>
+          <th scope='col'>Id</th>
+          <th scope='col'>Title</th>
+          <th scope='col'>Content</th>
+          <th></th>
+          <th></th>
+          <th></th>
+          {{! <th scope="col"></th> }}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each notes}}
+          <tr>
+            <th scope='row'>{{this.id}}</th>
+            <td>{{this.title}}</td>
+            <td>{{this.description}}</td>
+            <td>
+              {{! DELETE NOTES }}
+              <form action='/notes/{{this.id}}' method='post'>
+                <input type='hidden' name='_method' value='DELETE' />
+                <input type='hidden' name='id' value='{{this.id}}' />
+                <input
+                  type='submit'
+                  class='btn btn-danger btn-sm'
+                  value='Delete'
+                />
+              </form>
+            </td>
+            <td>
+
+              {{! EDIT NOTES }}
+              <form action='/notes/{{this.id}}/edit' method='get'>
+                <input
+                  type='submit'
+                  class='btn btn-primary btn-sm'
+                  value='Edit'
+                />
+              </form>
+            </td>
+            <td>
+
+              {{! SHARE NOTES }}
+              <form action='/notes/{{this.id}}/share' method='get'>
+                <input
+                  type='submit'
+                  class='btn btn-primary btn-sm'
+                  value='Share'
+                />
+              </form>
+            </td>
+          </tr>        
+        {{/each}}
+      </tbody>
+    </table>
+    {{! </form> }}
+  </body>
+</html>

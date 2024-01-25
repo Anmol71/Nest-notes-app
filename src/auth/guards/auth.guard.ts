@@ -12,16 +12,21 @@ export class AuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    console.log('hello....')
     const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
+    // const token = this.extractTokenFromHeader(request);
+    const token: { access_token: string } = request.cookies.Authorization;
+    console.log('Token', token);
     if (!token) {
       throw new UnauthorizedException();
     }
-    const payload = await this.jwtService.decode(token, { json: true });
+    const payload = await this.jwtService.decode(token.access_token, {
+      json: true,
+    });
     // 💡 We're assigning the payload to the request object here
     // so that we can access it in our route handlers
+    console.log(payload);
     request.user = payload.user_id;
+    // request['user'] = payload;
     return true;
   }
 

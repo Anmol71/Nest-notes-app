@@ -13,7 +13,10 @@ import { Injectable } from '@nestjs/common';
 export class IsUniqueValidator implements ValidatorConstraintInterface {
   constructor(private usersService: UsersService) {}
   public async validate(username: any): Promise<boolean> {
-    return !this.usersService.findByUserName(username);
+    return this.usersService.findByUserName(username).then((user) => {
+      if (user) return false;
+      return true;
+    });
   }
 
   public defaultMessage(validationArguments?: ValidationArguments) {

@@ -2,13 +2,11 @@ import {
   BelongsTo,
   Column,
   ForeignKey,
-  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { UserModel } from './user.model';
 import { NoteModel } from './note.model';
-
 
 @Table({ tableName: 'shared_notes' })
 export class SharedNoteModel extends Model {

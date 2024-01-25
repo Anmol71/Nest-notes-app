@@ -23,7 +23,7 @@ export const up: Migration = async ({ context: sequelize }) => {
     },
     hidden: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
+      defaultValue: false,
     },
 
     createdAt: {
