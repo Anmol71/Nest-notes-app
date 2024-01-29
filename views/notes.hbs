@@ -136,9 +136,9 @@
     <tbody>
         {{#each sharedToMe}}
           <tr>
-            <th scope='row'>{{this.id}}</th>
-            <td>{{this.title}}</td>
-            <td>{{this.description}}</td>
+            <th scope='row'>{{this.note.id}}</th>
+            <td>{{this.note.title}}</td>
+            <td>{{this.note.description}}</td>
             <td>
               {{! DELETE NOTES }}
               {{!-- <form action='/notes/{{this.id}}' method='post'>

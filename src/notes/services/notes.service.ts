@@ -46,7 +46,7 @@ export class NotesService {
       where: {
         user_id: user_id,
       },
-      raw: true,
+      // raw: true,
     });
   }
 

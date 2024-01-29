@@ -42,7 +42,7 @@ export class NotesController {
     console.log(notes);
     return { notes };
   }
-
+  //This route will show all notes depending on the query.
   @Render('notes')
   @Get()
   public async getNotes(
@@ -62,7 +62,7 @@ export class NotesController {
     } else if (notes === 'createdByMe') {
       return { myNotes };
     } else if (notes === 'sharedWithMe') {
-      console.log('SharedWith me notes', sharedToMe);
+      console.log('SharedWith me notes', sharedToMe, 'SharedWithMe');
       return { sharedToMe };
     }
     return { myNotes: myNotes, sharedToMe: sharedToMe };

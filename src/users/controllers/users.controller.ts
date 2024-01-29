@@ -6,7 +6,6 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  Redirect,
   Render,
   UsePipes,
   ValidationPipe,

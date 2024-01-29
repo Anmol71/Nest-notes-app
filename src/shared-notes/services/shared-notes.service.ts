@@ -41,11 +41,10 @@ export class SharedNotesService {
   // }
   public async notesSharedToMe(user_id: number) {
     return this.sharedNoteModel.scope('WithNoteUser').findAll({
-      attributes: ['note.title', 'note.description', 'note.id'],
+      // attributes: ['note.title', 'note.description', 'note.id'],
       where: {
         shared_with: user_id,
       },
-      raw: true,
     });
   }
 
