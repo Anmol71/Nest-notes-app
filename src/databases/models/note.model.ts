@@ -3,12 +3,14 @@ import {
   BelongsTo,
   Column,
   ForeignKey,
+  HasMany,
   Model,
   PrimaryKey,
   Scopes,
   Table,
 } from 'sequelize-typescript';
 import { UserModel } from './user.model';
+import { SharedNoteModel } from './shared-notes.model';
 
 // @DefaultScope(()=> ({
 //   include: UserModel,
@@ -16,6 +18,9 @@ import { UserModel } from './user.model';
 @Scopes(() => ({
   withUser: {
     include: UserModel,
+  },
+  WithNote: {
+    include: NoteModel,
   },
   hidden: {
     where: {
@@ -51,4 +56,7 @@ export class NoteModel extends Model {
 
   @BelongsTo(() => UserModel)
   public user: UserModel;
+
+  @HasMany(()=> SharedNoteModel)
+  public shareUser: SharedNoteModel;
 }

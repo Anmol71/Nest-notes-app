@@ -1,17 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Param, Delete, UseGuards } from '@nestjs/common';
 import { SharedNotesService } from '../services/shared-notes.service';
-import { CreateSharedNoteDto } from '../dtos/create-shared-note.dto';
+
 // import { UpdateSharedNoteDto } from '../dtos/update-shared-note.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
+import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
 
 @UseGuards(AuthGuard)
 @Controller('shared-notes')
@@ -24,6 +17,13 @@ export class SharedNotesController {
   // ) {
   //   return this.sharedNotesService.create(createSharedNoteDto, user);
   // }
+
+  @Get()
+  public async notesSharedToMe(
+    @AuthUser() user_id: number,
+  ): Promise<SharedNoteModel[]> {
+    return this.sharedNotesService.notesSharedToMe(user_id);
+  }
 
   @Get()
   findAll() {

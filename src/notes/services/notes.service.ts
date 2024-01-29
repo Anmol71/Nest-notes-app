@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { NoteModel } from 'src/databases/models/note.model';
+import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
 import { UserModel } from 'src/databases/models/user.model';
 import { SharedNotesService } from 'src/shared-notes/services/shared-notes.service';
 @Injectable()
@@ -37,15 +38,45 @@ export class NotesService {
       .findAll({ where: { user_id: user_id } });
   }
 
-  public getMyNotes(user: number | UserModel): Promise<NoteModel[]> {
+  public getMyNotes(user: number | UserModel) {
     const user_id = typeof user === 'number' ? user : user.id;
     console.log('User Id ', user_id);
-    return this.noteModel.findAll({
+    return this.noteModel.scope(['withUser']).findAll({
+      include: [{ model: SharedNoteModel }],
       where: {
         user_id: user_id,
       },
       raw: true,
     });
+  }
+
+  public async showMyReceivedNotes(note: Pick<NoteModel, 'user_id'>) {
+    console.log(note, 'lol');
+
+    const data = await this.noteModel.findAll({
+      where: { shared_from: note.user_id },
+      attributes: ['shared_note_id'],
+      include: [
+        { model: UserModel, attributes: ['name'], as: 'sender' },
+        {
+          model: NoteModel,
+          attributes: ['title', 'content'],
+          as: 'notes',
+        },
+      ],
+      raw: true,
+    });
+
+    const noteWithUsername = data.map((note) => {
+      const noteObject = Object.assign({}, note);
+      const username = noteObject['sender.name'];
+      const title = noteObject['notes.title'];
+      const content = noteObject['notes.content'];
+      const data = { username, title, content };
+      return data;
+    });
+
+    return noteWithUsername;
   }
 
   // public findUserId(createNote: Pick<NoteModel, 'user_id'>) {
@@ -57,7 +88,7 @@ export class NotesService {
     return this.noteModel.findByPk(id, { rejectOnEmpty: true });
   }
 
-  public findOne(id: number){
+  public findOne(id: number) {
     return this.noteModel.findByPk(id);
   }
 

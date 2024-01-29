@@ -31,7 +31,7 @@ export class UsersController {
   }
 
   @Get()
-  @Redirect('/users')
+  // @Redirect('/users')
   // @Render('usersList')
   public findAll() {
     console.log('Find All');

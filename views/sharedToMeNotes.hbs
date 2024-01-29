@@ -36,13 +36,6 @@
               class='text-decoration-none text-primary mx-3 '
               href='/notes/create'
             >Create Notes</a>
-            
-            
-            <a class='text-decoration-none text-primary mx-5' href='/notes?shared=all'>All Notes</a>
-
-            <a class='text-decoration-none text-primary mx-5' href='/notes?shared=createdByMe'>CreatedByMe Notes</a>
-
-            <a class='text-decoration-none text-primary mx-5' href='/notes?shared=sharedWithMe'>SharedWithMe Notes</a>
           </ul>
            <form action="/auth/logout" method="post">
               <input type="submit" class="btn btn-secondary end-0 top-0 position-absolute mx-3" value="Log Out">
@@ -53,12 +46,7 @@
     </nav>
 
     {{! <form action='/notes' method='POST'> }}
-        {{#if myNotes}}
-    <center>
-      <h3>Created By Me Notes </h3>
-
-      </center>
-    <table class='table table-bordered table-dark table-striped mb-5'>
+    <table class='table table-bordered table-dark table-striped'>
       <thead>
         <tr>
           <th scope='col'>Id</th>
@@ -112,72 +100,8 @@
             </td>
           </tr>        
         {{/each}}
-        </tbody>
-      </table>
-        {{/if}}
-
-        {{#if sharedToMe}}
-      <center>
-      <h3>Shared To Me Notes</h3>
-
-      </center>
-     <table class='table table-bordered table-dark table-striped'>
-      <thead>
-        <tr>
-          <th scope='col'>Id</th>
-          <th scope='col'>Title</th>
-          <th scope='col'>Content</th>
-          <th></th>
-          <th></th>
-          <th></th>
-          {{! <th scope="col"></th> }}
-        </tr>
-      </thead>
-    <tbody>
-        {{#each sharedToMe}}
-          <tr>
-            <th scope='row'>{{this.id}}</th>
-            <td>{{this.title}}</td>
-            <td>{{this.description}}</td>
-            <td>
-              {{! DELETE NOTES }}
-              {{!-- <form action='/notes/{{this.id}}' method='post'>
-                <input type='hidden' name='_method' value='DELETE' />
-                <input type='hidden' name='id' value='{{this.id}}' />
-                <input
-                  type='submit'
-                  class='btn btn-danger btn-sm'
-                  value='Delete'
-                />
-              </form> --}}
-            </td>
-            <td>
-
-              {{! EDIT NOTES }}
-              {{!-- <form action='/notes/{{this.id}}/edit' method='get'>
-                <input
-                  type='submit'
-                  class='btn btn-primary btn-sm'
-                  value='Edit'
-                />
-              </form> --}}
-            </td>
-            <td>
-
-              {{! SHARE NOTES }}
-              {{!-- <form action='/notes/{{this.id}}/share' method='get'>
-                <input
-                  type='submit'
-                  class='btn btn-primary btn-sm'
-                  value='Share'
-                />
-              </form> --}}
-            </td>
-          </tr>        
-        {{/each}}
       </tbody>
-    </table>    
-    {{/if}}
+    </table>
     {{! </form> }}
   </body>
 </html>
