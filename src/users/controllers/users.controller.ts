@@ -34,7 +34,8 @@ export class UsersController {
   // @Render('usersList')
   public findAll() {
     console.log('Find All');
-    return this.usersService.findAll();
+    const users = this.usersService.findAll();
+    return users;
   }
   @UsePipes(new ValidationPipe({ transform: true }))
   @Get(':id')

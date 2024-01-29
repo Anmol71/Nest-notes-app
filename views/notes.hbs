@@ -127,9 +127,7 @@
           <th scope='col'>Id</th>
           <th scope='col'>Title</th>
           <th scope='col'>Content</th>
-          <th></th>
-          <th></th>
-          <th></th>
+          <th scope='col'>Shared_By</th>
           {{! <th scope="col"></th> }}
         </tr>
       </thead>
@@ -139,40 +137,10 @@
             <th scope='row'>{{this.note.id}}</th>
             <td>{{this.note.title}}</td>
             <td>{{this.note.description}}</td>
-            <td>
-              {{! DELETE NOTES }}
-              {{!-- <form action='/notes/{{this.id}}' method='post'>
-                <input type='hidden' name='_method' value='DELETE' />
-                <input type='hidden' name='id' value='{{this.id}}' />
-                <input
-                  type='submit'
-                  class='btn btn-danger btn-sm'
-                  value='Delete'
-                />
-              </form> --}}
-            </td>
-            <td>
+            <td>{{this.sender.username}}</td>
+            
+            
 
-              {{! EDIT NOTES }}
-              {{!-- <form action='/notes/{{this.id}}/edit' method='get'>
-                <input
-                  type='submit'
-                  class='btn btn-primary btn-sm'
-                  value='Edit'
-                />
-              </form> --}}
-            </td>
-            <td>
-
-              {{! SHARE NOTES }}
-              {{!-- <form action='/notes/{{this.id}}/share' method='get'>
-                <input
-                  type='submit'
-                  class='btn btn-primary btn-sm'
-                  value='Share'
-                />
-              </form> --}}
-            </td>
           </tr>        
         {{/each}}
       </tbody>

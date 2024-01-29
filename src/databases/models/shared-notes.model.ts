@@ -38,7 +38,7 @@ export class SharedNoteModel extends Model {
   public shared_with_users: UserModel[];
 
   @BelongsTo(() => UserModel, 'shared_from')
-  public shared_from_user: UserModel;
+  public sender: UserModel;
 
   @BelongsTo((): typeof NoteModel => NoteModel)
   public note: NoteModel;

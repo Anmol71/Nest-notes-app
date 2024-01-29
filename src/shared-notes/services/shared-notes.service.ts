@@ -45,6 +45,7 @@ export class SharedNotesService {
       where: {
         shared_with: user_id,
       },
+      include: [{ model: UserModel, attributes: ['username'], as: 'sender' }],
     });
   }
 

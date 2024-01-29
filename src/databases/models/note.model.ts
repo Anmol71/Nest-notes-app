@@ -57,6 +57,6 @@ export class NoteModel extends Model {
   @BelongsTo(() => UserModel)
   public user: UserModel;
 
-  @HasMany(()=> SharedNoteModel)
+  @HasMany(() => SharedNoteModel)
   public shareUser: SharedNoteModel;
 }
