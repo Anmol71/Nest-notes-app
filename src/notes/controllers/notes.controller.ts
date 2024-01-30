@@ -26,6 +26,7 @@ import { UsersService } from 'src/users/services/users.service';
 import { CreateSharedNoteDto } from 'src/shared-notes/dtos/create-shared-note.dto';
 import { SharedNotesService } from 'src/shared-notes/services/shared-notes.service';
 import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
+import { UserModel } from 'src/databases/models/user.model';
 
 @UseGuards(AuthGuard)
 @Controller('notes')
@@ -37,8 +38,8 @@ export class NotesController {
   ) {}
 
   // @Get()
-  public async getMyNotes(@AuthUser() userId: number) {
-    const notes = await this.notesService.getMyNotes(userId);
+  public async getMyNotes(@AuthUser() user: UserModel) {
+    const notes = await this.notesService.getMyNotes(user.id);
     console.log(notes);
     return { notes };
   }
@@ -46,7 +47,7 @@ export class NotesController {
   @Render('notes')
   @Get()
   public async getNotes(
-    @AuthUser() user_id: number,
+    @AuthUser() user: UserModel,
     @Query('shared') notes: 'all' | 'createdByMe' | 'sharedWithMe',
   ): Promise<
     | { myNotes: NoteModel[]; sharedToMe: SharedNoteModel[] }
@@ -54,8 +55,8 @@ export class NotesController {
     | { sharedToMe: SharedNoteModel[] }
   > {
     const sharedToMe: SharedNoteModel[] =
-      await this.sharedNotesService.notesSharedToMe(user_id);
-    const myNotes: NoteModel[] = await this.notesService.getMyNotes(user_id);
+      await this.sharedNotesService.notesSharedToMe(user.id);
+    const myNotes: NoteModel[] = await this.notesService.getMyNotes(user.id);
     if (notes === 'all') {
       console.log('myNotes', myNotes);
       return { myNotes, sharedToMe };
@@ -73,16 +74,16 @@ export class NotesController {
   @Render('usersList')
   public async shareWithUsers(
     @Param('noteId', ParseIntPipe, MapToNotesPipe) note: NoteModel,
-    @AuthUser() user_id: number,
+    @AuthUser() users: UserModel,
   ) {
-    const users = await this.usersService.findAll();
-    const filteredUsers = users.filter((user) => {
-      return user_id !== user.id;
+    const allUsers = await this.usersService.findAll();
+    const filteredUsers = allUsers.filter((user) => {
+      return users.id !== user.id;
     });
     console.log('UsersList', filteredUsers);
-    console.log('Users', users);
+    console.log('Users', allUsers);
     // console.log('Find All', users, 'Users');
-    return { filteredUsers, users, note: note.toJSON() };
+    return { filteredUsers, note: note.toJSON() };
   }
 
   @Render('createNotes')
@@ -99,8 +100,11 @@ export class NotesController {
 
   @Post()
   @Redirect('/notes')
-  public create(@AuthUser() user: number, @Body() createNote: CreateNoteDto) {
-    this.notesService.create(createNote, user);
+  public create(
+    @AuthUser() user: UserModel,
+    @Body() createNote: CreateNoteDto,
+  ) {
+    this.notesService.create(createNote, user.id);
   }
 
   // ROUTE FOR SHARING THE NOTE.
@@ -108,18 +112,18 @@ export class NotesController {
   @Redirect('/notes')
   public sharedWithSingleUser(
     @Param('noteId', ParseIntPipe, MapToNotesPipe) note: NoteModel,
-    @AuthUser() userId: number,
+    @AuthUser() user: UserModel,
     @Body() sharedNoteDto: CreateSharedNoteDto,
   ) {
     console.log('CreateSharedNoteDto', sharedNoteDto);
     console.log('NOteId/Share.....');
-    this.sharedNotesService.create(sharedNoteDto, userId, note);
+    this.sharedNotesService.create(sharedNoteDto, user.id, note);
   }
 
   @Get(':id')
-  public findAll(@AuthUser() user: number): Promise<NoteModel[]> {
+  public findAll(@AuthUser() user: UserModel): Promise<NoteModel[]> {
     console.log('get');
-    return this.notesService.findAllByUser(user);
+    return this.notesService.findAllByUser(user.id);
   }
 
   @Put(':id')
@@ -132,9 +136,13 @@ export class NotesController {
   ) {
     return this.notesService.update(note, createNoteDto);
   }
+
   @Redirect('/notes')
   @Delete(':id')
-  public remove(@Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel) {
+  public remove(
+    @Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel,
+    Shared: SharedNoteModel,
+  ) {
     return this.notesService.remove(note);
   }
 }

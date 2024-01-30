@@ -22,6 +22,9 @@ import { SharedNoteModel } from './shared-notes.model';
   WithNote: {
     include: NoteModel,
   },
+  WithSharedUser: {
+    include: SharedNoteModel,
+  },
   hidden: {
     where: {
       hidden: false,

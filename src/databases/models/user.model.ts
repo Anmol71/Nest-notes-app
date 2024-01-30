@@ -24,6 +24,10 @@ export class UserModel extends Model {
   @Column
   password: string;
 
+  @Unique
+  @Column
+  email: string;
+
   @HasMany(() => NoteModel)
   public notes: NoteModel[];
 
