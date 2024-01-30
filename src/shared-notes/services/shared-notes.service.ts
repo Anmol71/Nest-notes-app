@@ -49,6 +49,14 @@ export class SharedNotesService {
     });
   }
 
+  public async getSharedToUserId(note_id: number): Promise<SharedNoteModel> {
+    return this.sharedNoteModel.findOne({
+      where: {
+        note_id: note_id,
+      },
+    });
+  }
+
   findAll() {
     return `This action returns all sharedNotes`;
   }

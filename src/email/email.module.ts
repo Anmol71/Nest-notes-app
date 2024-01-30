@@ -17,16 +17,16 @@ import { EmailController } from './email.controller';
           host: config.get('MAIL_HOST'),
           secure: false,
           auth: {
-            user: config.get('SMTP_USERNAME'),
-            pass: config.get('SMTP_PASSWORD'),
+            user: config.get('MAIL_USER'),
+            pass: config.get('MAIL_PASSWORD'),
           },
         },
         defaults: {
-          from: `"nest-modules" <${config.get('SMTP_USERNAME')}>`,
+          from: `"nest-modules" <${config.get('MAIL_FROM')}>`,
         },
         preview: true,
         template: {
-          dir: join(__dirname, 'views'),
+          dir: join(__dirname, 'templates'),
           adapter: new HandlebarsAdapter(),
           options: {
             strict: false,

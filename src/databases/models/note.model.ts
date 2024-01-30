@@ -23,7 +23,7 @@ import { SharedNoteModel } from './shared-notes.model';
     include: NoteModel,
   },
   WithSharedUser: {
-    include: SharedNoteModel,
+    include: [{ model: SharedNoteModel }],
   },
   hidden: {
     where: {
@@ -61,5 +61,5 @@ export class NoteModel extends Model {
   public user: UserModel;
 
   @HasMany(() => SharedNoteModel)
-  public shareUser: SharedNoteModel;
+  public sharedNotes: SharedNoteModel[];
 }

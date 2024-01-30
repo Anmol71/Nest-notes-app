@@ -141,7 +141,7 @@ export class NotesController {
   @Delete(':id')
   public remove(
     @Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel,
-    Shared: SharedNoteModel,
+    // @AuthUser() user: UserModel,
   ) {
     return this.notesService.remove(note);
   }
