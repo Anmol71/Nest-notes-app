@@ -15,16 +15,11 @@ import { EmailController } from './email.controller';
       useFactory: async (config: ConfigService) => ({
         transport: {
           host: config.get('MAIL_HOST'),
-          secure: false,
-          auth: {
-            user: config.get('MAIL_USER'),
-            pass: config.get('MAIL_PASSWORD'),
-          },
+          port: config.get('MAIL_PORT'),
         },
         defaults: {
           from: `"nest-modules" <${config.get('MAIL_FROM')}>`,
         },
-        preview: true,
         template: {
           dir: join(__dirname, 'templates'),
           adapter: new HandlebarsAdapter(),

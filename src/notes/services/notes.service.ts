@@ -103,19 +103,31 @@ export class NotesService {
     return note.set(updateNote).save();
   }
 
-  public async remove(note: NoteModel): Promise<void> {
+  public async remove(note: NoteModel): Promise<null> {
     // console.log('NoteId', note);
     // const sharedToUser: SharedNoteModel =
     //   await this.sharedNotesService.getSharedToUserId(note.id);
-   const sharedNotes = await note.$get('sharedNotes');
-    console.log(sharedNotes, 'shared');
+    const sharedNotes = await note.$get('sharedNotes');
+    // console.log(sharedNotes, 'shared');
+    const sharedWithUserEmails = Promise.all(
+      sharedNotes.map(
+        async (sharedNote) =>
+          (await this.usersService.findOne(sharedNote.shared_with)).email,
+      ),
+    );
+    console.log('Email IDs.... ', await sharedWithUserEmails);
 
     // const user: UserModel = await this.usersService.findOne(1);
     // console.log(user, 'UASER');
     // const notes = await user.$get('sharedNotes');
     // console.log(notes, 'notes');
 
-    await this.emailService.sendEmail(note.title, note.description, user.email);
+    await this.emailService.sendEmail(
+      note.title,
+      note.description,
+      await sharedWithUserEmails,
+    );
+    return note.destroy().then(() => null);
   }
 
   public async deleteNote(
