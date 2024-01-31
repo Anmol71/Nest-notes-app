@@ -2,11 +2,10 @@
 
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Global, Module } from '@nestjs/common';
-import { EmailService } from './email.service';
+import { EmailService } from './services/email.service';
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { EmailController } from './email.controller';
 
 @Global()
 @Module({
@@ -33,6 +32,5 @@ import { EmailController } from './email.controller';
   ],
   providers: [EmailService],
   exports: [EmailService],
-  controllers: [EmailController],
 })
 export class EmailModule {}
