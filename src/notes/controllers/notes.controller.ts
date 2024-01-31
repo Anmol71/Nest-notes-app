@@ -36,14 +36,14 @@ export class NotesController {
     private usersService: UsersService,
     private sharedNotesService: SharedNotesService,
   ) {}
-
   // @Get()
-  public async getMyNotes(@AuthUser() user: UserModel) {
+  public async getMyNotes(
+    @AuthUser() user: UserModel,
+  ): Promise<{ notes: NoteModel[] }> {
     const notes = await this.notesService.getMyNotes(user.id);
-    console.log(notes);
     return { notes };
   }
-  //This route will show all notes depending on the query.
+
   @Render('notes')
   @Get()
   public async getNotes(
@@ -58,31 +58,25 @@ export class NotesController {
       await this.sharedNotesService.notesSharedToMe(user.id);
     const myNotes: NoteModel[] = await this.notesService.getMyNotes(user.id);
     if (notes === 'all') {
-      console.log('myNotes', myNotes);
       return { myNotes, sharedToMe };
     } else if (notes === 'createdByMe') {
       return { myNotes };
     } else if (notes === 'sharedWithMe') {
-      console.log('SharedWith me notes', sharedToMe, 'SharedWithMe');
       return { sharedToMe };
     }
     return { myNotes: myNotes, sharedToMe: sharedToMe };
   }
 
   @Get(':noteId/share')
-  // @Redirect('/users')
   @Render('usersList')
   public async shareWithUsers(
     @Param('noteId', ParseIntPipe, MapToNotesPipe) note: NoteModel,
     @AuthUser() users: UserModel,
   ) {
-    const allUsers = await this.usersService.findAll();
-    const filteredUsers = allUsers.filter((user) => {
+    const allUsers: UserModel[] = await this.usersService.findAll();
+    const filteredUsers: UserModel[] = allUsers.filter((user) => {
       return users.id !== user.id;
     });
-    console.log('UsersList', filteredUsers);
-    console.log('Users', allUsers);
-    // console.log('Find All', users, 'Users');
     return { filteredUsers, note: note.toJSON() };
   }
 
@@ -103,7 +97,7 @@ export class NotesController {
   public create(
     @AuthUser() user: UserModel,
     @Body() createNote: CreateNoteDto,
-  ) {
+  ): void {
     this.notesService.create(createNote, user.id);
   }
 
@@ -115,14 +109,11 @@ export class NotesController {
     @AuthUser() user: UserModel,
     @Body() sharedNoteDto: CreateSharedNoteDto,
   ) {
-    console.log('CreateSharedNoteDto', sharedNoteDto);
-    console.log('NOteId/Share.....');
     this.sharedNotesService.create(sharedNoteDto, user.id, note);
   }
 
   @Get(':id')
   public findAll(@AuthUser() user: UserModel): Promise<NoteModel[]> {
-    console.log('get');
     return this.notesService.findAllByUser(user.id);
   }
 
@@ -133,7 +124,7 @@ export class NotesController {
   public editNote(
     @Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel,
     @Body() createNoteDto: CreateNoteDto,
-  ) {
+  ): Promise<NoteModel> {
     return this.notesService.update(note, createNoteDto);
   }
 
@@ -141,8 +132,7 @@ export class NotesController {
   @Delete(':id')
   public remove(
     @Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel,
-    // @AuthUser() user: UserModel,
-  ) {
+  ): Promise<null> {
     return this.notesService.remove(note);
   }
 }
