@@ -3,11 +3,17 @@ import {
   Column,
   ForeignKey,
   Model,
+  Scopes,
   Table,
 } from 'sequelize-typescript';
 import { UserModel } from './user.model';
 import { NoteModel } from './note.model';
 
+@Scopes(() => ({
+  WithNoteUser: {
+    include: NoteModel,
+  },
+}))
 @Table({ tableName: 'shared_notes' })
 export class SharedNoteModel extends Model {
   @ForeignKey(() => UserModel)
@@ -32,5 +38,8 @@ export class SharedNoteModel extends Model {
   public shared_with_users: UserModel[];
 
   @BelongsTo(() => UserModel, 'shared_from')
-  public shared_from_user: UserModel;
+  public sender: UserModel;
+
+  @BelongsTo((): typeof NoteModel => NoteModel)
+  public note: NoteModel;
 }

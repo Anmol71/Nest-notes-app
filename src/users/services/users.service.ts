@@ -18,7 +18,7 @@ export class UsersService {
   }
 
   public findOne(id: number): Promise<UserModel> {
-    return this.userModel.findByPk(id, { rejectOnEmpty: true });
+    return this.userModel.findByPk(id);
   }
 
   /**
@@ -41,6 +41,13 @@ export class UsersService {
       .save();
   }
 
+  public async addEmail(
+    user: UserModel,
+    updateEmailDto: Pick<UserModel, 'email'>,
+  ): Promise<UserModel> {
+    const email = updateEmailDto.email;
+    return user.set({ email: email }).save();
+  }
   // update(id: number, updateUserDto: UserModel) {
   //   this.users = this.users.map((user) => {
   //     if (user.id === id) {

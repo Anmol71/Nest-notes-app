@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../../users/services/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { UserModel } from 'src/databases/models/user.model';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +15,7 @@ export class AuthService {
   ) {}
 
   public async signIn(username, pass) {
-    const user = await this.usersService.findByUserName(username);
+    const user: UserModel = await this.usersService.findByUserName(username);
     if (!user) {
       throw new NotFoundException();
     }

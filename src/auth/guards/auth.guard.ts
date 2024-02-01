@@ -6,27 +6,30 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import { UserModel } from 'src/databases/models/user.model';
+import { UsersService } from 'src/users/services/users.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private usersService: UsersService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
-    // const token = this.extractTokenFromHeader(request);
+    const request: any = context.switchToHttp().getRequest();
     const token: { access_token: string } = request.cookies.Authorization;
-    console.log('Token', token);
     if (!token) {
       throw new UnauthorizedException();
     }
-    const payload = await this.jwtService.decode(token.access_token, {
+    const payload: any = await this.jwtService.decode(token.access_token, {
       json: true,
     });
+    const user: UserModel = await this.usersService.findOne(payload.user_id);
+
     // 💡 We're assigning the payload to the request object here
     // so that we can access it in our route handlers
-    console.log(payload);
-    request.user = payload.user_id;
-    // request['user'] = payload;
+    request.user = user;
     return true;
   }
 

@@ -19,24 +19,24 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
-  // @Redirect('/notepad')
   @Render('createNotes')
   @Post('login')
   public async signIn(
     @Body(ValidationPipe) signInDto: LoginUserDto,
     @Res({ passthrough: true }) response: Response,
-  ) {
+  ): Promise<void> {
     const token = await this.authService.signIn(
       signInDto.username,
       signInDto.password,
     );
     response.cookie('Authorization', token);
-    // response.redirect('/notes');
     return;
   }
   @Post('logout')
   @Redirect('/auth/login')
-  public async signOut(@Res({ passthrough: true }) response: Response) {
+  public async signOut(
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<void> {
     response.cookie('Authorization', '');
   }
 

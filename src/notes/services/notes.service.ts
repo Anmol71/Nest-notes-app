@@ -1,24 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { NoteModel } from 'src/databases/models/note.model';
+import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
 import { UserModel } from 'src/databases/models/user.model';
+import { EmailService } from 'src/email/services/email.service';
 import { SharedNotesService } from 'src/shared-notes/services/shared-notes.service';
+import { UsersService } from 'src/users/services/users.service';
 @Injectable()
 export class NotesService {
   constructor(
     @InjectModel(NoteModel)
     private noteModel: typeof NoteModel,
     private sharedNotesService: SharedNotesService,
+    private usersService: UsersService,
+    private emailService: EmailService,
   ) {}
 
   public create(
     createNote: Pick<NoteModel, 'title' | 'description' | 'hidden'>,
     user: number | UserModel,
   ): Promise<NoteModel> {
-    const title = createNote.title;
-    const description = createNote.description;
-    const user_id = typeof user === 'number' ? user : user.id;
-    const hidden = createNote.hidden;
+    const title: string = createNote.title;
+    const description: string = createNote.description;
+    const user_id: number = typeof user === 'number' ? user : user.id;
+    const hidden: boolean = createNote.hidden;
     return this.noteModel
       .build()
       .set({
@@ -31,33 +36,47 @@ export class NotesService {
   }
 
   public findAllByUser(user: number | UserModel): Promise<NoteModel[]> {
-    const user_id = typeof user === 'number' ? user : user.id;
+    const user_id: number = typeof user === 'number' ? user : user.id;
     return this.noteModel
       .scope(['withUser'])
       .findAll({ where: { user_id: user_id } });
   }
 
   public getMyNotes(user: number | UserModel): Promise<NoteModel[]> {
-    const user_id = typeof user === 'number' ? user : user.id;
+    const user_id: number = typeof user === 'number' ? user : user.id;
     console.log('User Id ', user_id);
-    return this.noteModel.findAll({
+    return this.noteModel.scope(['withUser']).findAll({
+      include: [{ model: SharedNoteModel }],
       where: {
         user_id: user_id,
       },
-      raw: true,
+      // raw: true,
     });
   }
 
-  // public findUserId(createNote: Pick<NoteModel, 'user_id'>) {
-  //   const user_id = createNote.user_id;
-  //   return this.noteModel.findOne({ where: { user_id: user_id } });
-  // }
+  public async showMyReceivedNotes(
+    note: Pick<NoteModel, 'user_id'>,
+  ): Promise<NoteModel[]> {
+    return this.noteModel.findAll({
+      where: { shared_from: note.user_id },
+      attributes: ['shared_note_id'],
+      include: [
+        { model: UserModel, attributes: ['name'], as: 'sender' },
+        {
+          model: NoteModel,
+          attributes: ['title', 'content'],
+          as: 'notes',
+        },
+      ],
+      // raw: true,
+    });
+  }
 
   public findOrFail(id: number): Promise<NoteModel> {
     return this.noteModel.findByPk(id, { rejectOnEmpty: true });
   }
 
-  public findOne(id: number){
+  public findOne(id: number): Promise<NoteModel> {
     return this.noteModel.findByPk(id);
   }
 
@@ -68,27 +87,36 @@ export class NotesService {
     return note.set(updateNote).save();
   }
 
-  public remove(note: NoteModel): Promise<void> {
-    return note.destroy();
+  public async remove(note: NoteModel): Promise<null> {
+    const sharedNotes: SharedNoteModel[] = await note.$get('sharedNotes');
+    const sharedWithUserEmails = Promise.all(
+      sharedNotes.map(
+        async (sharedNote) =>
+          (await this.usersService.findOne(sharedNote.shared_with)).email,
+      ),
+    );
+    await this.emailService.sendEmail(
+      note.title,
+      note.description,
+      await sharedWithUserEmails,
+    );
+    return note.destroy().then(() => null);
   }
 
   public async deleteNote(
     user: number | UserModel,
     id: number,
   ): Promise<number> {
-    const user_id = typeof user === 'number' ? user : user.id;
-    return this.noteModel.destroy({
-      where: {
-        user_id: user_id,
-        id: id,
-      },
-    });
-  }
+    const user_id: number = typeof user === 'number' ? user : user.id;
 
-  // public sharedWithSingleUser(note: NoteModel , user: number | UserModel,){
-  //   const note_id = note.id;
-  //   const user_id = typeof user === 'number' ? user: user.id;
-  //   return this..build().set({
-  //   })
-  // }
+    const sharedUser: number = await this.noteModel
+      .scope(['WithSharedUser'])
+      .destroy({
+        where: {
+          user_id: user_id,
+          id: id,
+        },
+      });
+    return sharedUser;
+  }
 }

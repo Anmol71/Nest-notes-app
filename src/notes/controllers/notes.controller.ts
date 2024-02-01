@@ -14,6 +14,7 @@ import {
   UsePipes,
   Redirect,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { NotesService } from '../services/notes.service';
 import { CreateNoteDto } from '../dtos/create-note.dto';
@@ -24,6 +25,8 @@ import { MapToNotesPipe } from '../pipes/map-to-notes.pipe';
 import { UsersService } from 'src/users/services/users.service';
 import { CreateSharedNoteDto } from 'src/shared-notes/dtos/create-shared-note.dto';
 import { SharedNotesService } from 'src/shared-notes/services/shared-notes.service';
+import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
+import { UserModel } from 'src/databases/models/user.model';
 
 @UseGuards(AuthGuard)
 @Controller('notes')
@@ -33,24 +36,48 @@ export class NotesController {
     private usersService: UsersService,
     private sharedNotesService: SharedNotesService,
   ) {}
+  // @Get()
+  public async getMyNotes(
+    @AuthUser() user: UserModel,
+  ): Promise<{ notes: NoteModel[] }> {
+    const notes = await this.notesService.getMyNotes(user.id);
+    return { notes };
+  }
 
   @Render('notes')
   @Get()
-  public async getMyNotes(@AuthUser() userId: number) {
-    const notes = await this.notesService.getMyNotes(userId);
-    console.log(notes);
-    return { notes };
+  public async getNotes(
+    @AuthUser() user: UserModel,
+    @Query('shared') notes: 'all' | 'createdByMe' | 'sharedWithMe',
+  ): Promise<
+    | { myNotes: NoteModel[]; sharedToMe: SharedNoteModel[] }
+    | { myNotes: NoteModel[] }
+    | { sharedToMe: SharedNoteModel[] }
+  > {
+    const sharedToMe: SharedNoteModel[] =
+      await this.sharedNotesService.notesSharedToMe(user.id);
+    const myNotes: NoteModel[] = await this.notesService.getMyNotes(user.id);
+    if (notes === 'all') {
+      return { myNotes, sharedToMe };
+    } else if (notes === 'createdByMe') {
+      return { myNotes };
+    } else if (notes === 'sharedWithMe') {
+      return { sharedToMe };
+    }
+    return { myNotes: myNotes, sharedToMe: sharedToMe };
   }
+
   @Get(':noteId/share')
-  // @Redirect('/users')
   @Render('usersList')
   public async shareWithUsers(
     @Param('noteId', ParseIntPipe, MapToNotesPipe) note: NoteModel,
+    @AuthUser() users: UserModel,
   ) {
-    const users = await this.usersService.findAll();
-    console.log({ users, note: note.toJSON() }, 'notesadewfefrfrf');
-    // console.log('Find All', users, 'Users');
-    return { users, note: note.toJSON() };
+    const allUsers: UserModel[] = await this.usersService.findAll();
+    const filteredUsers: UserModel[] = allUsers.filter((user) => {
+      return users.id !== user.id;
+    });
+    return { filteredUsers, note: note.toJSON() };
   }
 
   @Render('createNotes')
@@ -67,8 +94,11 @@ export class NotesController {
 
   @Post()
   @Redirect('/notes')
-  public create(@AuthUser() user: number, @Body() createNote: CreateNoteDto) {
-    this.notesService.create(createNote, user);
+  public create(
+    @AuthUser() user: UserModel,
+    @Body() createNote: CreateNoteDto,
+  ): void {
+    this.notesService.create(createNote, user.id);
   }
 
   // ROUTE FOR SHARING THE NOTE.
@@ -76,18 +106,15 @@ export class NotesController {
   @Redirect('/notes')
   public sharedWithSingleUser(
     @Param('noteId', ParseIntPipe, MapToNotesPipe) note: NoteModel,
-    @AuthUser() userId: number,
+    @AuthUser() user: UserModel,
     @Body() sharedNoteDto: CreateSharedNoteDto,
   ) {
-    console.log('CreateSharedNoteDto', sharedNoteDto);
-    console.log('NOteId/Share.....');
-    this.sharedNotesService.create(sharedNoteDto, userId, note);
+    this.sharedNotesService.create(sharedNoteDto, user.id, note);
   }
 
   @Get(':id')
-  public findAll(@AuthUser() user: number): Promise<NoteModel[]> {
-    console.log('get');
-    return this.notesService.findAllByUser(user);
+  public findAll(@AuthUser() user: UserModel): Promise<NoteModel[]> {
+    return this.notesService.findAllByUser(user.id);
   }
 
   @Put(':id')
@@ -97,12 +124,15 @@ export class NotesController {
   public editNote(
     @Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel,
     @Body() createNoteDto: CreateNoteDto,
-  ) {
+  ): Promise<NoteModel> {
     return this.notesService.update(note, createNoteDto);
   }
+
   @Redirect('/notes')
   @Delete(':id')
-  public remove(@Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel) {
+  public remove(
+    @Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel,
+  ): Promise<null> {
     return this.notesService.remove(note);
   }
 }

@@ -36,13 +36,6 @@
               class='text-decoration-none text-primary mx-3 '
               href='/notes/create'
             >Create Notes</a>
-            
-            
-            <a class='text-decoration-none text-primary mx-5' href='/notes?shared=all'>All Notes</a>
-
-            <a class='text-decoration-none text-primary mx-5' href='/notes?shared=createdByMe'>CreatedByMe Notes</a>
-
-            <a class='text-decoration-none text-primary mx-5' href='/notes?shared=sharedWithMe'>SharedWithMe Notes</a>
           </ul>
            <form action="/auth/logout" method="post">
               <input type="submit" class="btn btn-secondary end-0 top-0 position-absolute mx-3" value="Log Out">
@@ -53,12 +46,7 @@
     </nav>
 
     {{! <form action='/notes' method='POST'> }}
-        {{#if myNotes}}
-    <center>
-      <h3>Created By Me Notes </h3>
-
-      </center>
-    <table class='table table-bordered table-dark table-striped mb-5'>
+    <table class='table table-bordered table-dark table-striped'>
       <thead>
         <tr>
           <th scope='col'>Id</th>
@@ -94,7 +82,7 @@
               <form action='/notes/{{this.id}}/edit' method='get'>
                 <input
                   type='submit'
-                  class='btn btn-success btn-sm'
+                  class='btn btn-primary btn-sm'
                   value='Edit'
                 />
               </form>
@@ -112,40 +100,8 @@
             </td>
           </tr>        
         {{/each}}
-        </tbody>
-      </table>
-        {{/if}}
-
-        {{#if sharedToMe}}
-      <center>
-      <h3>Shared To Me Notes</h3>
-
-      </center>
-     <table class='table table-bordered table-dark table-striped'>
-      <thead>
-        <tr>
-          <th scope='col'>Id</th>
-          <th scope='col'>Title</th>
-          <th scope='col'>Content</th>
-          <th scope='col'>Shared_By</th>
-          {{! <th scope="col"></th> }}
-        </tr>
-      </thead>
-    <tbody>
-        {{#each sharedToMe}}
-          <tr>
-            <th scope='row'>{{this.note.id}}</th>
-            <td>{{this.note.title}}</td>
-            <td>{{this.note.description}}</td>
-            <td>{{this.sender.username}}</td>
-            
-            
-
-          </tr>        
-        {{/each}}
       </tbody>
-    </table>    
-    {{/if}}
+    </table>
     {{! </form> }}
   </body>
 </html>
