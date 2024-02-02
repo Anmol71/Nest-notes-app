@@ -9,6 +9,7 @@ import { DatabaseModule } from './databases/database.module';
 import { EnvConfigModule } from './env-config/env-config.module';
 import { LoggerMiddleware } from './common/logger.middleware';
 import { EmailModule } from './email/email.module';
+import { NestjsFormDataModule } from 'nestjs-form-data';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { EmailModule } from './email/email.module';
     DatabaseModule,
     EnvConfigModule,
     EmailModule,
+    NestjsFormDataModule,
   ],
   controllers: [AppController],
   providers: [AppService],

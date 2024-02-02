@@ -28,6 +28,9 @@ export class UserModel extends Model {
   @Column
   email: string;
 
+  @Column
+  filename: string;
+
   @HasMany(() => NoteModel)
   public notes: NoteModel[];
 

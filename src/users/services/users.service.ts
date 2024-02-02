@@ -48,26 +48,31 @@ export class UsersService {
     const email = updateEmailDto.email;
     return user.set({ email: email }).save();
   }
-  // update(id: number, updateUserDto: UserModel) {
-  //   this.users = this.users.map((user) => {
-  //     if (user.id === id) {
-  //       return { ...user, ...updateUserDto };
-  //     }
-  //     return user;
-  //   });
-
-  //   return this.findOne(id);
-  // }
 
   public delete(id: number): Promise<null> {
     return this.userModel.destroy({ where: { id: id } }).then(() => null);
   }
-  // public shareNote(sharedWith: number|UserModel , note: number| NoteModel){
 
-  //   return this.SharedNoteModel.build().set({
-  //   note_id:typeof note ==='number'? note:note.id;
-  //   shared_by:
-  //   })
+  public async getImage(id: number) {
+    return this.userModel.findOne({
+      where: {
+        id: id,
+      },
+    });
+  }
 
-  // }
+  public async addImage(id: number, filename: string) {
+    // console.log(image);
+    return this.userModel.update(
+      { filename: filename },
+      {
+        where: {
+          id: id,
+        },
+      },
+    );
+  }
+
+  // get the disk and put the file received from the controller in the disk
+  // for retrieving the file get the disk and call the get method on it.
 }
