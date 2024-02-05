@@ -54,15 +54,7 @@ export class UsersController {
     console.log('showing profile page');
     const users = await this.usersService.findOne(authUser.id);
     return { users };
-    // return {};
   }
-
-  // @UseGuards(AuthGuard)
-  // @Get('image')
-  // public async getImage(@AuthUser() authUser: UserModel) {
-  //   return await this.usersService.getImage(authUser);
-  //   console.log('Image....');
-  // }
 
   @Get()
   // @Redirect('/users')
@@ -84,7 +76,6 @@ export class UsersController {
     const user = await this.usersService.findOne(authUser.id);
     const image = await Storage.disk('local').get(user.filename);
     const file = new StreamableFile(image);
-    console.log('file', file);
     return file;
   }
 
@@ -122,8 +113,6 @@ export class UsersController {
     @AuthUser() authUser: UserModel,
   ) {
     // call the user service method to store the file
-    console.log('we will get photo here', updateProfileDto.avatar);
-
     await this.usersService.addImage(authUser, updateProfileDto);
   }
 }
