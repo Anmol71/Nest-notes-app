@@ -4,5 +4,5 @@ import { IsUnique } from 'src/auth/validations/unique.validation';
 export class UpdateEmailDto {
   @IsString()
   @IsUnique()
-  email: string;
+  public email: string;
 }
