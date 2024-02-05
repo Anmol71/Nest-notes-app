@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { SharedNotesService } from '../services/shared-notes.service';
 
 // import { UpdateSharedNoteDto } from '../dtos/update-shared-note.dto';
@@ -26,16 +26,6 @@ export class SharedNotesController {
     return this.sharedNotesService.notesSharedToMe(user.id);
   }
 
-  @Get()
-  findAll() {
-    return this.sharedNotesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.sharedNotesService.findOne(+id);
-  }
-
   // @Patch(':id')
   // update(
   //   @Param('id') id: string,
@@ -43,9 +33,4 @@ export class SharedNotesController {
   // ) {
   //   return this.sharedNotesService.update(+id, updateSharedNoteDto);
   // }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.sharedNotesService.remove(+id);
-  }
 }

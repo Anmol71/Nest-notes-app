@@ -14,7 +14,7 @@
       pointer; } body { background-image:
       url('https://c0.wallpaperflare.com/preview/153/321/260/laptop-document-paper-business.jpg');
       background-size: cover; background-repeat: no-repeat; } .top { margin-top:
-      58px; } .align-middle{ margin-top: 250px; height: 25%; width: 50%;
+      58px; } .align-middle{ margin-top: 100px; height: 25%; width: 50%;
       align-items: center; }
       img{
         border-radius: 50%;
@@ -60,20 +60,26 @@
           <center>
 
             <img src='/users/image' alt='{{users.filename}}' height="200" width="200" />
+            
+               {{!-- <form action='/users/image' method='post'>
+                <input type='hidden' name='_method' value='DELETE' />
+                <input type='hidden' name='id' value='' />
+                <input type="submit" value="Delete Profile" class="btn btn-sm btn-danger"> --}}
+           
 
           </center>
         </div>
-      {{/if}}
       {{else}}
       <div>
           <center>
 
-            <img src='/users/image' alt='{{users.filename}}' height="200" width="200" />
+            <img src="https://cdn-icons-png.flaticon.com/512/9706/9706583.png" alt='No picture' height="" width="200" /> 
 
           </center>
         </div>
+      {{/if}}
       <div class='align-middle'>
-        <h4 class='me-3 mt-2'>Add Profile Image </h4>
+        <h4 class=''>Add Profile Image </h4>
         <form action='/users/image' method='post' enctype='multipart/form-data'>
           <div class='input-group w-50 mt-3'>
             <input

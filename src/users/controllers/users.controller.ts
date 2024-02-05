@@ -98,6 +98,15 @@ export class UsersController {
     return this.usersService.addEmail(user, updateEmailDto);
   }
 
+  // @UseGuards(AuthGuard)
+  // @Redirect('/users/profile')
+  // @Delete('image')
+  // @FormDataRequest()
+  // public async deleteFiles(@AuthUser() authUser: UserModel) {
+  //   const user = await this.usersService.findOne(authUser.id);
+  //   await Storage.disk('local').delete(user.filename);
+  // }
+
   @Delete(':id')
   public remove(@AuthUser() user: UserModel) {
     return this.usersService.delete(user);
