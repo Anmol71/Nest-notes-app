@@ -15,21 +15,21 @@ export class UserModel extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: number;
+  public id: number;
 
   @Unique
   @Column
-  username: string;
+  public username: string;
 
   @Column
-  password: string;
+  public password: string;
 
   @Unique
   @Column
-  email: string;
+  public email: string;
 
   @Column
-  filename: string;
+  public filename: string;
 
   @HasMany(() => NoteModel)
   public notes: NoteModel[];

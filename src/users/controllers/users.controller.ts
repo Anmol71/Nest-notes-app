@@ -3,13 +3,13 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Redirect,
   Render,
-  UploadedFile,
+  StreamableFile,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -21,7 +21,8 @@ import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
 import { UserModel } from 'src/databases/models/user.model';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { FormDataRequest } from 'nestjs-form-data';
-import { updateProfileDto } from '../dtos/update-profile.dto';
+import { UpdateProfileDto } from '../dtos/update-profile.dto';
+import { Storage } from '@squareboat/nest-storage';
 
 @Controller('users')
 export class UsersController {
@@ -52,16 +53,16 @@ export class UsersController {
   public async showProfilePge(@AuthUser() authUser: UserModel) {
     console.log('showing profile page');
     const users = await this.usersService.findOne(authUser.id);
-    console.log(users);
     return { users };
     // return {};
   }
 
-  @UseGuards(AuthGuard)
-  @Get('image')
-  public async getImage(@AuthUser() authUser: UserModel) {
-    return (await this.usersService.getImage(authUser.id)).filename;
-  }
+  // @UseGuards(AuthGuard)
+  // @Get('image')
+  // public async getImage(@AuthUser() authUser: UserModel) {
+  //   return await this.usersService.getImage(authUser);
+  //   console.log('Image....');
+  // }
 
   @Get()
   // @Redirect('/users')
@@ -71,16 +72,27 @@ export class UsersController {
     const users = this.usersService.findAll();
     return users;
   }
+
+  @UseGuards(AuthGuard)
+  @Get('image')
+  @Header('Content-Type', 'image/jpeg')
+  @Header('Content-Type', 'image/png')
+  @Header('Content-Disposition', 'inline')
+  public async getFile(
+    @AuthUser() authUser: UserModel,
+  ): Promise<StreamableFile> {
+    const user = await this.usersService.findOne(authUser.id);
+    const image = await Storage.disk('local').get(user.filename);
+    const file = new StreamableFile(image);
+    console.log('file', file);
+    return file;
+  }
+
   @UsePipes(new ValidationPipe({ transform: true }))
   @Get(':id')
   public findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
-
-  //   @Patch(':id')
-  //   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //     return this.usersService.update(+id, updateUserDto);
-  //   }
 
   @UseGuards(AuthGuard)
   @Redirect('/users/email')
@@ -92,27 +104,26 @@ export class UsersController {
     updateEmailDto: UpdateEmailDto,
   ) {
     console.log('Email route running');
-    console.log('my user', user);
     return this.usersService.addEmail(user, updateEmailDto);
   }
 
   @Delete(':id')
-  public remove(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.delete(id);
+  public remove(@AuthUser() user: UserModel) {
+    return this.usersService.delete(user);
   }
 
-  // rewrite this method using nestjs-formdata package
   @UseGuards(AuthGuard)
-  @Post('image')
   @Redirect('/users/profile')
+  @Post('image')
   @FormDataRequest()
   public async uploadFiles(
-    @Body() updateProfileDto: updateProfileDto,
+    @Body(ValidationPipe) updateProfileDto: UpdateProfileDto,
     //   // use a dto for file upload as mentioned in the nestjs-formdata package
     @AuthUser() authUser: UserModel,
   ) {
     // call the user service method to store the file
-    await this.usersService.addImage(authUser.id, updateProfileDto.);
-    // return file;
+    console.log('we will get photo here', updateProfileDto.avatar);
+
+    await this.usersService.addImage(authUser, updateProfileDto);
   }
 }

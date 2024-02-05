@@ -1,8 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Storage } from '@squareboat/nest-storage';
+import { randomUUID } from 'crypto';
+import { readFile } from 'fs/promises';
 import { NoteModel } from 'src/databases/models/note.model';
 import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
 import { UserModel } from 'src/databases/models/user.model';
+import { UpdateProfileDto } from '../dtos/update-profile.dto';
 
 @Injectable()
 export class UsersService {
@@ -49,30 +53,20 @@ export class UsersService {
     return user.set({ email: email }).save();
   }
 
-  public delete(id: number): Promise<null> {
-    return this.userModel.destroy({ where: { id: id } }).then(() => null);
+  public delete(user: UserModel): Promise<null> {
+    return user.destroy().then(() => null);
   }
 
-  public async getImage(id: number) {
-    return this.userModel.findOne({
-      where: {
-        id: id,
-      },
-    });
+  public async getImage(user: UserModel) {
+    return user.filename;
   }
-
-  public async addImage(id: number, filename: string) {
+  public async addImage(user: UserModel, image: UpdateProfileDto) {
+    console.log('Image', image);
+    const path = `/profiles/${randomUUID()}.${image.avatar.extension}`;
+    await Storage.disk('local').put(path, await readFile(image.avatar.path));
     // console.log(image);
-    return this.userModel.update(
-      { filename: filename },
-      {
-        where: {
-          id: id,
-        },
-      },
-    );
+    return user.set({ filename: path }).save();
   }
-
   // get the disk and put the file received from the controller in the disk
   // for retrieving the file get the disk and call the get method on it.
 }
