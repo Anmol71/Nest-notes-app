@@ -28,25 +28,26 @@ import { Storage } from '@squareboat/nest-storage';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  //POST- For registration of user.
   @Render('thanksPage')
   @Post('register')
   public create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
-
+  //GET- For showing the registration page.
   @Render('register')
   @Get('register')
   public showRegister() {
     return {};
   }
-
+  //GET- For showing the email updation page.
   @Render('updateEmail')
   @Get('email')
   public showEmailPage() {
     console.log('Show Email Page');
     return {};
   }
-
+  //GET- For showing profile updation page.
   @Render('updateProfile')
   @UseGuards(AuthGuard)
   @Get('profile')
@@ -63,6 +64,7 @@ export class UsersController {
   //   return users;
   // }
 
+  //GET- To show the profile image in profile page.
   @UseGuards(AuthGuard)
   @Get('image')
   @Header('Content-Type', 'image/jpeg')
@@ -71,18 +73,20 @@ export class UsersController {
   public async getFile(
     @AuthUser() authUser: UserModel,
   ): Promise<StreamableFile> {
-    const user = await this.usersService.findOne(authUser.id);
+    const user = authUser;
     const image = await Storage.disk('local').get(user.filename);
     const file = new StreamableFile(image);
     return file;
   }
 
+  //GET- To find user on the basis of their unique id.
   @UsePipes(new ValidationPipe({ transform: true }))
   @Get(':id')
   public findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
 
+  //POST- To add the profile image of user.
   @UseGuards(AuthGuard)
   @Redirect('/users/profile')
   @Post('image')
@@ -96,6 +100,7 @@ export class UsersController {
     await this.usersService.addImage(authUser, updateProfileDto);
   }
 
+  //PATCH- To update the email of user.
   @UseGuards(AuthGuard)
   @Redirect('/users/email')
   @Patch('email')
@@ -105,7 +110,6 @@ export class UsersController {
     @Body(ValidationPipe)
     updateEmailDto: UpdateEmailDto,
   ) {
-    console.log('Email route running');
     return this.usersService.addEmail(user, updateEmailDto);
   }
 
@@ -118,6 +122,7 @@ export class UsersController {
   //   await Storage.disk('local').delete(user.filename);
   // }
 
+  //DELETE- To delete the user.
   @Delete(':id')
   public remove(@AuthUser() user: UserModel) {
     return this.usersService.delete(user);
