@@ -1,98 +1,107 @@
 <html lang='en'>
-  <head>
-    <meta charset='UTF-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <link
-      rel='stylesheet'
-      href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css'
-    />
-    <title>NotePad</title>
-    <style>
-      #textArea { width: 98%; margin-left: 12px; font-family: system-ui,
-      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-      Cantarell, "Open Sans", "Helvetica Neue", sans-serif; } li { cursor:
-      pointer; } body { background-image:
-      url('https://c0.wallpaperflare.com/preview/153/321/260/laptop-document-paper-business.jpg');
-      background-size: cover; background-repeat: no-repeat; } .top { margin-top:
-      58px; } .align-middle{ margin-top: 100px; height: 25%; width: 50%;
-      align-items: center; }
-      img{
-        border-radius: 50%;
-      }
-    </style>
-  </head>
-  <body>
-    <nav class='navbar navbar-expand-lg bg-body-tertiary'>
-      <div class='container-fluid'>
-        <a class='navbar-brand' href='#'>TextMate</a>
-        <button
-          class='navbar-toggler'
-          type='button'
-          data-bs-toggle='collapse'
-          data-bs-target='#navbarSupportedContent'
-          aria-controls='navbarSupportedContent'
-          aria-expanded='false'
-          aria-label='Toggle navigation'
-        >
-          <span class='navbar-toggler-icon'></span>
-        </button>
-        <div class='collapse navbar-collapse' id='navbarSupportedContent'>
-          <ul class='navbar-nav me-auto mb-2 mb-lg-0'>
-            <a
-              class='text-decoration-none text-primary mx-5'
-              href='/notes'
-            >Notes</a>
-            <a
-              class='text-decoration-none text-primary mx-3'
-              href='/notes/create'
-            >Create Notes</a>
 
-          </ul>
-          <form action='/auth/logout' method='post'>
-            <input type='submit' class='btn btn-secondary' value='Log Out' />
-          </form>
-        </div>
-      </div>
-    </nav>
-    <center>
-      {{#if users.filename}}
-        <div>
-          <center>
+<head>
+  <meta charset='UTF-8' />
+  <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css' />
+  <title>NotePad</title>
+  <style>
+    #textArea {
+      width: 98%;
+      margin-left: 12px;
+      font-family: system-ui,
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+        Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    }
 
-            <img src='/users/image' alt='{{users.filename}}' height="200" width="200" />
-            
-               {{!-- <form action='/users/image' method='post'>
-                <input type='hidden' name='_method' value='DELETE' />
-                <input type='hidden' name='id' value='' />
-                <input type="submit" value="Delete Profile" class="btn btn-sm btn-danger"> --}}
-           
+    li {
+      cursor:
+        pointer;
+    }
 
-          </center>
-        </div>
-      {{else}}
-      <div>
-          <center>
+    body {
+      background-image:
+        url('https://c0.wallpaperflare.com/preview/153/321/260/laptop-document-paper-business.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
 
-            <img src="https://cdn-icons-png.flaticon.com/512/9706/9706583.png" alt='No picture' height="" width="200" /> 
+    .top {
+      margin-top:
+        58px;
+    }
 
-          </center>
-        </div>
+    .align-middle {
+      margin-top: 100px;
+      height: 25%;
+
+      width: 50%;
+      align-items: center;
+    }
+
+    img {
+      border-radius: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class='navbar navbar-expand-lg bg-body-tertiary'>
+    <div class='container-fluid'>
+      <a class='navbar-brand' href='#'>TextMate</a>
+      {{#if user.filename}}
+      <img src='/users/image' alt='{{user.filename}}' height='30' width='30' />
       {{/if}}
-      <div class='align-middle'>
-        <h4 class=''>Add Profile Image </h4>
-        <form action='/users/image' method='post' enctype='multipart/form-data'>
-          <div class='input-group w-50 mt-3'>
-            <input
-              type='file'
-              class='form-control'
-              id='inputGroupFile02'
-              name='avatar'
-            />
-            <input type='submit' class='btn btn-primary' />
-          </div>
+
+      <button class='navbar-toggler' type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent'
+        aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation'>
+        <span class='navbar-toggler-icon'></span>
+      </button>
+      <div class='collapse navbar-collapse' id='navbarSupportedContent'>
+        <ul class='navbar-nav me-auto mb-2 mb-lg-0'>
+          <a class='text-decoration-none text-primary mx-5' href='/notes'>Notes</a>
+          <a class='text-decoration-none text-primary mx-3' href='/notes/create'>Create Notes</a>
+
+        </ul>
+        <form action='/auth/logout' method='post'>
+          <input type='submit' class='btn btn-secondary' value='Log Out' />
         </form>
       </div>
-    </center>
-  </body>
+    </div>
+  </nav>
+  <center>
+    {{#if user.filename}}
+    <div>
+      <center>
+
+        <img src='/users/image' alt='{{user.filename}}' height='200' width='200' />
+
+        {{! <form action='/users/image' method='post'>
+          <input type='hidden' name='_method' value='DELETE' />
+          <input type='hidden' name='id' value='' />
+          <input type="submit" value="Delete Profile" class="btn btn-sm btn-danger"> }}
+
+      </center>
+    </div>
+    {{else}}
+    <div>
+      <center>
+
+        <img src='https://cdn-icons-png.flaticon.com/512/9706/9706583.png' alt='No picture' height='' width='200' />
+
+      </center>
+    </div>
+    {{/if}}
+    <div class='align-middle'>
+      <h4 class=''>Add Profile Image </h4>
+      <form action='/users/image' method='post' enctype='multipart/form-data'>
+        <div class='input-group w-50 mt-3'>
+          <input type='file' class='form-control' id='inputGroupFile02' name='avatar' />
+          <input type='submit' class='btn btn-primary' />
+        </div>
+      </form>
+    </div>
+  </center>
+</body>
 
 </html>

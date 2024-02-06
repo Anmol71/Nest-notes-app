@@ -51,19 +51,17 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Get('profile')
   public async showProfilePge(@AuthUser() authUser: UserModel) {
-    console.log('showing profile page');
-    const users = await this.usersService.findOne(authUser.id);
-    return { users };
+    return { user: authUser };
   }
 
-  @Get()
-  // @Redirect('/users')
-  // @Render('usersList')
-  public findAll() {
-    console.log('Find All');
-    const users = this.usersService.findAll();
-    return users;
-  }
+  // @Get()
+  // // @Redirect('/users')
+  // // @Render('usersList')
+  // public findAll() {
+  //   console.log('Find All');
+  //   const users = this.usersService.findAll();
+  //   return users;
+  // }
 
   @UseGuards(AuthGuard)
   @Get('image')
