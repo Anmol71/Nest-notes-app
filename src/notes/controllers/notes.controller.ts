@@ -75,6 +75,11 @@ export class NotesController {
     return { user: authUser };
   }
 
+  @Get(':id')
+  public findAll(@AuthUser() user: UserModel): Promise<NoteModel[]> {
+    return this.notesService.findAllByUser(user.id);
+  }
+
   @Get(':noteId/share')
   @Render('usersList')
   public async shareWithUsers(
@@ -115,11 +120,6 @@ export class NotesController {
     @Body() sharedNoteDto: CreateSharedNoteDto,
   ) {
     this.sharedNotesService.create(sharedNoteDto, user.id, note);
-  }
-
-  @Get(':id')
-  public findAll(@AuthUser() user: UserModel): Promise<NoteModel[]> {
-    return this.notesService.findAllByUser(user.id);
   }
 
   @Put(':id')

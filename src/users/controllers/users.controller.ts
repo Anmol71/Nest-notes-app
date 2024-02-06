@@ -84,6 +84,19 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard)
+  @Redirect('/users/profile')
+  @Post('image')
+  @FormDataRequest()
+  public async uploadFiles(
+    @Body(ValidationPipe) updateProfileDto: UpdateProfileDto,
+    //   // use a dto for file upload as mentioned in the nestjs-formdata package
+    @AuthUser() authUser: UserModel,
+  ) {
+    // call the user service method to store the file
+    await this.usersService.addImage(authUser, updateProfileDto);
+  }
+
+  @UseGuards(AuthGuard)
   @Redirect('/users/email')
   @Patch('email')
   public async addEmail(
@@ -108,18 +121,5 @@ export class UsersController {
   @Delete(':id')
   public remove(@AuthUser() user: UserModel) {
     return this.usersService.delete(user);
-  }
-
-  @UseGuards(AuthGuard)
-  @Redirect('/users/profile')
-  @Post('image')
-  @FormDataRequest()
-  public async uploadFiles(
-    @Body(ValidationPipe) updateProfileDto: UpdateProfileDto,
-    //   // use a dto for file upload as mentioned in the nestjs-formdata package
-    @AuthUser() authUser: UserModel,
-  ) {
-    // call the user service method to store the file
-    await this.usersService.addImage(authUser, updateProfileDto);
   }
 }
