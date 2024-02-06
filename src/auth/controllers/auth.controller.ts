@@ -19,7 +19,8 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
-  @Render('createNotes')
+  // @Render('createNotes')
+  @Redirect('/notes/create')
   @Post('login')
   public async signIn(
     @Body(ValidationPipe) signInDto: LoginUserDto,
@@ -32,6 +33,7 @@ export class AuthController {
     response.cookie('Authorization', token);
     return;
   }
+
   @Post('logout')
   @Redirect('/auth/login')
   public async signOut(
