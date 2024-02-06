@@ -53,18 +53,26 @@ export class NotesController {
     | { myNotes: NoteModel[]; sharedToMe: SharedNoteModel[] }
     | { myNotes: NoteModel[] }
     | { sharedToMe: SharedNoteModel[] }
+    | { user: UserModel }
   > {
     const sharedToMe: SharedNoteModel[] =
       await this.sharedNotesService.notesSharedToMe(user.id);
     const myNotes: NoteModel[] = await this.notesService.getMyNotes(user.id);
     if (notes === 'all') {
-      return { myNotes, sharedToMe };
+      return { myNotes, sharedToMe, user: user };
     } else if (notes === 'createdByMe') {
-      return { myNotes };
+      return { myNotes, user: user };
     } else if (notes === 'sharedWithMe') {
-      return { sharedToMe };
+      return { sharedToMe, user: user };
     }
-    return { myNotes: myNotes, sharedToMe: sharedToMe };
+    return { myNotes: myNotes, sharedToMe: sharedToMe, user: user };
+  }
+
+  @Render('createNotes')
+  @UseGuards(AuthGuard)
+  @Get('create')
+  public showCreateNote(@AuthUser() authUser: UserModel) {
+    return { user: authUser };
   }
 
   @Get(':noteId/share')
@@ -77,20 +85,16 @@ export class NotesController {
     const filteredUsers: UserModel[] = allUsers.filter((user) => {
       return users.id !== user.id;
     });
-    return { filteredUsers, note: note.toJSON() };
-  }
-
-  @Render('createNotes')
-  @UseGuards(AuthGuard)
-  @Get('create')
-  public showCreateNote(@AuthUser() authUser: UserModel) {
-    return { user: authUser };
+    return { filteredUsers, note: note.toJSON(), user: users };
   }
 
   @Get(':id/edit')
   @Render('editNotes')
-  public Note(@Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel) {
-    return { note };
+  public Note(
+    @Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel,
+    @AuthUser() authUser: UserModel,
+  ) {
+    return { note, user: authUser };
   }
 
   @Post()
