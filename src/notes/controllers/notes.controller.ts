@@ -81,9 +81,10 @@ export class NotesController {
   }
 
   @Render('createNotes')
+  @UseGuards(AuthGuard)
   @Get('create')
-  public showCreateNote() {
-    return {};
+  public showCreateNote(@AuthUser() authUser: UserModel) {
+    return { user: authUser };
   }
 
   @Get(':id/edit')
