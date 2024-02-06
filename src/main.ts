@@ -19,7 +19,7 @@ async function bootstrap() {
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.use(cookieParser());
-  app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.useStaticAssets(join(process.cwd(), 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
   const configService = app.get(ConfigService);
