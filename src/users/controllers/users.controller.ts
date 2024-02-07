@@ -23,7 +23,8 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { FormDataRequest } from 'nestjs-form-data';
 import { UpdateProfileDto } from '../dtos/update-profile.dto';
 import { Storage } from '@squareboat/nest-storage';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

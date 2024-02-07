@@ -27,8 +27,10 @@ import { CreateSharedNoteDto } from 'src/shared-notes/dtos/create-shared-note.dt
 import { SharedNotesService } from 'src/shared-notes/services/shared-notes.service';
 import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
 import { UserModel } from 'src/databases/models/user.model';
+import { ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthGuard)
+@ApiTags('notes')
 @Controller('notes')
 export class NotesController {
   constructor(
