@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   FileSystemStoredFile,
   HasMimeType,
@@ -8,5 +9,6 @@ export class UpdateProfileDto {
   @MaxFileSize(1e6)
   @HasMimeType(['image/jpeg', 'image/png'])
   @IsFile()
+  @ApiProperty()
   public avatar: FileSystemStoredFile;
 }
