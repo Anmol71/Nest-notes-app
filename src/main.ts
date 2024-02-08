@@ -8,19 +8,12 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  // const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
-  // const viewsPath = join(__dirname, '../public/views');
-  // app.engine('.hbs', exphbs({ extname: '.hbs', defaultLayout: 'main' }));
-  // app.set('views', viewsPath);
-  // app.set('view engine', '.hbs');
-  // app.setViewEngine('hbs');
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.use(cookieParser());
   app.useStaticAssets(join(process.cwd(), 'public'));
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.setBaseViewsDir(join(process.cwd(), '..', 'views'));
   app.setViewEngine('hbs');
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT');
