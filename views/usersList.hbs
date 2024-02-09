@@ -25,11 +25,11 @@
     <nav class='navbar navbar-expand-lg bg-body-tertiary'>
         <div class='container-fluid'>
             <a class='navbar-brand' href='#'>TextMate</a>
-             {{#if user.filename}}
-      <img src='/users/image' alt='{{user.filename}}' height='30' width='30' />
-      {{else}}
-      <img src='/blank-profile-picture-973460_1280.png' alt='No picture' height='30' width='30' />
-      {{/if}}
+            {{#if user.filename}}
+            <img src='/users/image' alt='{{user.filename}}' height='30' width='30' />
+            {{else}}
+            <img src='/blank-profile-picture-973460_1280.png' alt='No picture' height='30' width='30' />
+            {{/if}}
             <button class='navbar-toggler' type='button' data-bs-toggle='collapse'
                 data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false'
                 aria-label='Toggle navigation'>
@@ -52,7 +52,6 @@
                     <th scope='col'>Username</th>
 
                     <th></th>
-                    {{! <th scope="col"></th> }}
                 </tr>
             </thead>
             <tbody>

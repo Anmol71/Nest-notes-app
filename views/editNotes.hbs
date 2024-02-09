@@ -37,7 +37,7 @@
   <nav class='navbar navbar-expand-lg bg-body-tertiary mx-1'>
     <div class='container-fluid'>
       <a class='navbar-brand' href='#'>TextMate</a>
-       {{#if user.filename}}
+      {{#if user.filename}}
       <img src='/users/image' alt='{{user.filename}}' height='30' width='30' />
       {{else}}
       <img src='/blank-profile-picture-973460_1280.png' alt='No picture' height='30' width='30' />
@@ -60,7 +60,6 @@
   <center>
     <h2>Edit Notes Here</h2>
   </center>
-  {{! <span class="mx-4" id="fileName">No file opened </span> }}
   <form action='/notes/{{this.note.id}}' method='post'>
     <input type='hidden' name='_method' value='PUT' />
     <input type='hidden' name='id' value='{{this.id}}' />
@@ -79,21 +78,6 @@
     </div>
     <button class='btn btn-secondary my-2 mx-3'>Save</button>
   </form>
-  {{!-- <form action='/notes/'></form>
-  <form action='/shared_notes' method='post'>
-    <button class='btn btn-secondary mx-3'>Share</button>
-
-  </form> --}}
-  {{! <div class="border p-5">
-    <div style="float: right;">
-
-      <form action="/notes/all" method="POST">
-        <input type="hidden" name="_method" value="DELETE">
-        <input type="submit" class="btn btn-danger" value="Delete All Notes">
-      </form>
-    </div> }}
-
-    {{! <td><button type='submit' class='btn btn-danger'>Delete</button></td> }}
 
 </body>
 
