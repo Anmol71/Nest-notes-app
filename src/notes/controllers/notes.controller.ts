@@ -15,6 +15,7 @@ import {
   Redirect,
   ParseIntPipe,
   Query,
+  NotFoundException,
 } from '@nestjs/common';
 import { NotesService } from '../services/notes.service';
 import { CreateNoteDto } from '../dtos/create-note.dto';
@@ -116,11 +117,20 @@ export class NotesController {
   // ROUTE FOR SHARING THE NOTE.
   @Post(':noteId/share')
   @Redirect('/notes')
-  public sharedWithSingleUser(
+  public async sharedWithSingleUser(
     @Param('noteId', ParseIntPipe, MapToNotesPipe) note: NoteModel,
     @AuthUser() user: UserModel,
     @Body() sharedNoteDto: CreateSharedNoteDto,
   ) {
+    const sharedWithUser = await this.usersService.findOne(
+      sharedNoteDto.shared_with,
+    );
+
+    console.log('sharedWithUserrr', sharedWithUser);
+    if (!sharedWithUser.email) {
+      throw new NotFoundException('Email Not Found!');
+    }
+
     this.sharedNotesService.create(sharedNoteDto, user.id, note);
   }
 

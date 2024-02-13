@@ -95,6 +95,10 @@ export class NotesService {
           (await this.usersService.findOne(sharedNote.shared_with)).email,
       ),
     );
+
+    console.log('sharedNotess', sharedNotes);
+    console.log('sharedWithUserEmails', await sharedWithUserEmails);
+
     await this.emailService.sendEmail(
       note.title,
       note.description,

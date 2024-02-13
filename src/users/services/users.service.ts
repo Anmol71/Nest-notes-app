@@ -34,6 +34,15 @@ export class UsersService {
     return this.userModel.findOne({ where: { username: username } });
   }
 
+  /**
+   * This function find the user email in the table
+   * @param email
+   * @returns
+   */
+  public findByUserEmail(email: string): Promise<UserModel> {
+    return this.userModel.findOne({ where: { email: email } });
+  }
+
   public async create(
     createUserDto: Pick<UserModel, 'username' | 'password'>,
   ): Promise<UserModel> {
