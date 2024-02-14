@@ -6,10 +6,12 @@ import { ConfigService } from '@nestjs/config';
 import { useContainer } from 'class-validator';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  app.useGlobalPipes(new ValidationPipe());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.use(cookieParser());
   app.useStaticAssets(join(process.cwd(), 'public'));
