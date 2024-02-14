@@ -98,12 +98,13 @@ export class NotesService {
 
     console.log('sharedNotess', sharedNotes);
     console.log('sharedWithUserEmails', await sharedWithUserEmails);
-
-    await this.emailService.sendEmail(
-      note.title,
-      note.description,
-      await sharedWithUserEmails,
-    );
+    if ((await sharedWithUserEmails).length) {
+      await this.emailService.sendEmail(
+        note.title,
+        note.description,
+        await sharedWithUserEmails,
+      );
+    }
     return note.destroy().then(() => null);
   }
 

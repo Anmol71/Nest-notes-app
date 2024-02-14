@@ -88,11 +88,15 @@ export class NotesController {
   public async shareWithUsers(
     @Param('noteId', ParseIntPipe, MapToNotesPipe) note: NoteModel,
     @AuthUser() users: UserModel,
+    @Body() sharedNoteDto: CreateSharedNoteDto,
   ) {
     const allUsers: UserModel[] = await this.usersService.findAll();
     const filteredUsers: UserModel[] = allUsers.filter((user) => {
       return users.id !== user.id;
     });
+    const sharedWithUser = await this.usersService.findOne(
+      sharedNoteDto.shared_with,
+    );
     return { filteredUsers, note: note.toJSON(), user: users };
   }
 
@@ -109,7 +113,7 @@ export class NotesController {
   @Redirect('/notes')
   public create(
     @AuthUser() user: UserModel,
-    @Body() createNote: CreateNoteDto,
+    @Body(ValidationPipe) createNote: CreateNoteDto,
   ): void {
     this.notesService.create(createNote, user.id);
   }
@@ -136,7 +140,7 @@ export class NotesController {
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  @UsePipes(ValidationPipe)
+  // @UsePipes(ValidationPipe)
   @Redirect('/notes')
   public editNote(
     @Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel,

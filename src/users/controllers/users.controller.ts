@@ -32,7 +32,7 @@ export class UsersController {
   //POST- For registration of user.
   @Render('thanksPage')
   @Post('register')
-  public create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
+  public create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
   //GET- For showing the registration page.
