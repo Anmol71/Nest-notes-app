@@ -18,6 +18,10 @@
             cursor:
                 pointer;
         }
+
+        .cursor-not-allowed {
+            cursor: not-allowed !important;
+        }
     </style>
 </head>
 
@@ -50,6 +54,7 @@
 
                     <th scope='col'>UserId</th>
                     <th scope='col'>Username</th>
+                    <th scope="col">Email</th>
 
                     <th></th>
                 </tr>
@@ -65,11 +70,19 @@
                         {{this.username}}
                     </td>
                     <td>
-                        <form action="/notes/{{../note.id}}/share" method="post">
-                            <input type="hidden" value="{{this.id}}" name="shared_with">
-
-                            <input type='submit' class='btn btn-primary ' value='Share' />
-                        </form>
+                         {{#if this.email }}
+                                {{this.email}}
+                         {{else}}
+                                Email Not Provided
+                          {{/if}}
+                    </td>
+                    <td>
+                        {{#if this.email}}  
+                            <form action="/notes/{{../note.id}}/share" method="post">
+                                <input type="number" class="d-none" value="{{this.id}}" name="shared_with">
+                                <button type="submit" class="btn btn-primary" >Share</button>
+                            </form>
+                        {{/if}}
                     </td>
 
 

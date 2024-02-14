@@ -11,11 +11,9 @@ import {
   HttpCode,
   HttpStatus,
   ValidationPipe,
-  UsePipes,
   Redirect,
   ParseIntPipe,
   Query,
-  NotFoundException,
 } from '@nestjs/common';
 import { NotesService } from '../services/notes.service';
 import { CreateNoteDto } from '../dtos/create-note.dto';
@@ -29,6 +27,7 @@ import { SharedNotesService } from 'src/shared-notes/services/shared-notes.servi
 import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
 import { UserModel } from 'src/databases/models/user.model';
 import { ApiTags } from '@nestjs/swagger';
+import { MapToUserPipe } from 'src/users/pipes/map-to-user.pipe';
 
 @UseGuards(AuthGuard)
 @ApiTags('notes')
@@ -83,21 +82,22 @@ export class NotesController {
     return this.notesService.findAllByUser(user.id);
   }
 
-  @Get(':noteId/share')
+  @Get(':noteId(\\d+)/share')
   @Render('usersList')
   public async shareWithUsers(
-    @Param('noteId', ParseIntPipe, MapToNotesPipe) note: NoteModel,
-    @AuthUser() users: UserModel,
-    @Body() sharedNoteDto: CreateSharedNoteDto,
+    @Param('noteId', MapToNotesPipe) note: NoteModel,
+    @AuthUser() loginUser: UserModel,
   ) {
     const allUsers: UserModel[] = await this.usersService.findAll();
     const filteredUsers: UserModel[] = allUsers.filter((user) => {
-      return users.id !== user.id;
+      return user.id !== loginUser.id;
     });
-    const sharedWithUser = await this.usersService.findOne(
-      sharedNoteDto.shared_with,
-    );
-    return { filteredUsers, note: note.toJSON(), user: users };
+    console.log('allUsers', allUsers);
+    console.log('filteredUsers', filteredUsers);
+    // const sharedWithUser = await this.usersService.findOne(
+    //   sharedNoteDto.shared_with,
+    // );
+    return { filteredUsers, note: note.toJSON(), user: loginUser };
   }
 
   @Get(':id/edit')
@@ -119,22 +119,15 @@ export class NotesController {
   }
 
   // ROUTE FOR SHARING THE NOTE.
-  @Post(':noteId/share')
   @Redirect('/notes')
+  @Post(':noteId(\\d+)/share')
   public async sharedWithSingleUser(
-    @Param('noteId', ParseIntPipe, MapToNotesPipe) note: NoteModel,
+    @Param('noteId', MapToNotesPipe) note: NoteModel,
     @AuthUser() user: UserModel,
     @Body() sharedNoteDto: CreateSharedNoteDto,
+    @Body('shared_with', MapToUserPipe) sharedWithUser: UserModel,
   ) {
-    const sharedWithUser = await this.usersService.findOne(
-      sharedNoteDto.shared_with,
-    );
-
     console.log('sharedWithUserrr', sharedWithUser);
-    if (!sharedWithUser.email) {
-      throw new NotFoundException('Email Not Found!');
-    }
-
     this.sharedNotesService.create(sharedNoteDto, user.id, note);
   }
 

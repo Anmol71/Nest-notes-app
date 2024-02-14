@@ -1,9 +1,12 @@
+/* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty } from 'class-validator';
+import { Transform,  } from 'class-transformer';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateSharedNoteDto {
-  @IsNotEmpty()
-  @IsInt()
   @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber({allowNaN: false})
+  @Transform(({value}) => parseFloat(value), {toClassOnly: true})
   public shared_with: number;
 }

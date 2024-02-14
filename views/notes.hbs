@@ -22,7 +22,6 @@
     background-size: cover;
     background-repeat: no-repeat;
 
-
     .top {
       margin-top: 58px;
     }
@@ -100,9 +99,7 @@
         <td>
 
           {{! SHARE NOTES }}
-          <form action='/notes/{{this.id}}/share' method='get'>
-            <input type='submit' class='btn btn-primary btn-sm' value='Share' />
-          </form>
+          <a href="/notes/{{this.id}}/share" class="btn btn-primary btn-sm">Share</a>
         </td>
       </tr>
       {{/each}}

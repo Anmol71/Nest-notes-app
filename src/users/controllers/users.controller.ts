@@ -5,6 +5,7 @@ import {
   Get,
   Header,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Redirect,
@@ -83,8 +84,8 @@ export class UsersController {
   //GET- To find user on the basis of their unique id.
   @UsePipes(new ValidationPipe({ transform: true }))
   @Get(':id')
-  public findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  public findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.findOne(id);
   }
 
   //POST- To add the profile image of user.

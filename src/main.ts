@@ -11,7 +11,7 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.use(cookieParser());
   app.useStaticAssets(join(process.cwd(), 'public'));
