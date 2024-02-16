@@ -7,6 +7,7 @@ import { useContainer } from 'class-validator';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
+import { AppClusterService } from './common/services/app-cluster.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -31,4 +32,6 @@ async function bootstrap() {
 
   await app.listen(port);
 }
-bootstrap();
+// bootstrap();
+//Call app-cluster.service.ts here.
+AppClusterService.clusterize(bootstrap);

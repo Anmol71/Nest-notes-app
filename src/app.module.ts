@@ -12,6 +12,7 @@ import { EmailModule } from './email/email.module';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AppClusterService } from './common/services/app-cluster.service';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { join } from 'path';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppClusterService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
