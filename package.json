@@ -45,6 +45,7 @@
     "method-override": "^3.0.0",
     "mysql2": "^3.7.0",
     "nest-commander": "^3.12.5",
+    "nestjs-command": "^3.1.4",
     "nestjs-form-data": "^1.9.5",
     "nodemailer": "^6.9.8",
     "reflect-metadata": "^0.1.13",
