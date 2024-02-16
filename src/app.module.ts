@@ -13,6 +13,7 @@ import { NestjsFormDataModule } from 'nestjs-form-data';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppClusterService } from './common/services/app-cluster.service';
+import { CliCommandsModule } from './cli-commands/cli-commands.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { AppClusterService } from './common/services/app-cluster.service';
         index: false,
       },
     }),
+    CliCommandsModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppClusterService],
