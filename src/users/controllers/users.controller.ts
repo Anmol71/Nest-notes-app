@@ -25,6 +25,7 @@ import { FormDataRequest } from 'nestjs-form-data';
 import { UpdateProfileDto } from '../dtos/update-profile.dto';
 import { Storage } from '@squareboat/nest-storage';
 import { ApiTags } from '@nestjs/swagger';
+
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
@@ -125,8 +126,11 @@ export class UsersController {
   // }
 
   //DELETE- To delete the user.
-  @Delete(':id')
-  public remove(@AuthUser() user: UserModel) {
-    return this.usersService.delete(user);
+  @UseGuards(AuthGuard)
+  @Redirect('/auth/login')
+  @Delete('delete')
+  public remove(@AuthUser() authUser: UserModel) {
+    console.log('user', authUser);
+    return this.usersService.delete(authUser);
   }
 }

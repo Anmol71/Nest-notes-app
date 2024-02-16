@@ -62,7 +62,8 @@ export class UsersService {
     return user.set({ email: email }).save();
   }
 
-  public delete(user: UserModel): Promise<null> {
+  public async delete(user: UserModel): Promise<null> {
+    console.log('User', user);
     return user.destroy().then(() => null);
   }
 
