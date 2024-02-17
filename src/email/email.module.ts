@@ -20,7 +20,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
           from: `"nest-modules" <${config.get('MAIL_FROM')}>`,
         },
         template: {
-          dir: join(__dirname, 'templates'),
+          dir: join(process.cwd(), 'templates'),
           adapter: new HandlebarsAdapter(),
           options: {
             strict: false,

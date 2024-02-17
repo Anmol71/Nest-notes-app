@@ -95,11 +95,16 @@ export class NotesService {
           (await this.usersService.findOne(sharedNote.shared_with)).email,
       ),
     );
-    await this.emailService.sendEmail(
-      note.title,
-      note.description,
-      await sharedWithUserEmails,
-    );
+
+    console.log('sharedNotess', sharedNotes);
+    console.log('sharedWithUserEmails', await sharedWithUserEmails);
+    if ((await sharedWithUserEmails).length) {
+      await this.emailService.sendEmail(
+        note.title,
+        note.description,
+        await sharedWithUserEmails,
+      );
+    }
     return note.destroy().then(() => null);
   }
 

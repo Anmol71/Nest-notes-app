@@ -4,7 +4,7 @@
   <meta charset='UTF-8' />
   <meta name='viewport' content='width=device-width, initial-scale=1.0' />
   <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css' />
-  <title>NotePad</title>
+  <title>Profile</title>
   <style>
     #textArea {
       width: 98%;
@@ -30,11 +30,23 @@
       margin-top:
         58px;
     }
+
+    .align-middle {
+      margin-top: 80px;
+      height: 25%;
+
+      width: 50%;
+      align-items: center;
+    }
+
+    img {
+      border-radius: 50%;
+    }
   </style>
 </head>
 
 <body>
-  <nav class='navbar navbar-expand-lg bg-body-tertiary mx-1'>
+  <nav class='navbar navbar-expand-lg bg-body-tertiary'>
     <div class='container-fluid'>
       <a class='navbar-brand' href='#'>TextMate</a>
       {{#if user.filename}}
@@ -42,43 +54,51 @@
       {{else}}
       <img src='/blank-profile-picture-973460_1280.png' alt='No picture' height='30' width='30' />
       {{/if}}
+
       <button class='navbar-toggler' type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent'
         aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation'>
         <span class='navbar-toggler-icon'></span>
       </button>
       <div class='collapse navbar-collapse' id='navbarSupportedContent'>
         <ul class='navbar-nav me-auto mb-2 mb-lg-0'>
-          <li class='nav-item mx-3' onclick='handleUpClick()'>Upper</li>
-          <li class='nav-item mx-3' onclick='handleDownClick()'>Lower</li>
-          <li class='nav-item mx-3' onclick='handleCapText()'>Captalize</li>
-          <li class='nav-item mx-3' onclick='handleClearText()'>Clear</li>
-          <a class='text-decoration-none text-primary mx-5' href='/notes'>Saved Notes</a>
+          <a class='text-decoration-none text-primary mx-5' href='/notes'>Notes</a>
+          <a class='text-decoration-none text-primary mx-3' href='/notes/create'>Create Notes</a>
+
         </ul>
+        <form action='/auth/logout' method='post'>
+          <input type='submit' class='btn btn-secondary' value='Log Out' />
+        </form>
       </div>
     </div>
   </nav>
   <center>
-    <h2>Edit Notes Here</h2>
-  </center>
-  <form action='/notes/{{this.note.id}}' method='post'>
-    <input type='hidden' name='_method' value='PUT' />
-    <input type='hidden' name='id' value='{{this.id}}' />
-    <div class='my-3 mx-3'>
-      <label for='Title'>Title</label>
-      <input type='text' class='form-control' id='title' name='title' value='{{this.note.title}}' />
-    </div>
-    <label class='mx-3' for='Description'>Description</label>
-    <textarea class='form-control form-control-lg' name='description' id='textArea' cols='20' rows='10'
-      placeholder='Write your notes here'>{{this.note.description}}</textarea>
-    <div class='form-check text-start my-3 mx-3'>
-      <input class='form-check-input' type='checkbox' value='remember-me' id='checkBox' />
-      <label class='form-check-label' for='checkBox'>
-        Hide
-      </label>
-    </div>
-    <button class='btn btn-secondary my-2 mx-3'>Save</button>
-  </form>
+    {{#if user.filename}}
+    <div>
+      <center>
 
+        <img src='/users/image' alt='{{user.filename}}' height='200' width='200' />
+
+      </center>
+    </div>
+    {{else}}
+    <div>
+      <center>
+
+        <img src='/blank-profile-picture-973460_1280.png' alt='No picture' height='200' width='200' />
+
+      </center>
+    </div>
+    {{/if}}
+    <div class='align-middle'>
+      <h4 class=''>Update Profile Image </h4>
+      <form action='/users/image' method='post' enctype='multipart/form-data'>
+        <div class='input-group w-50 mt-3'>
+          <input type='file' class='form-control' id='inputGroupFile02' name='avatar' />
+          <input type='submit' class='btn btn-primary' />
+        </div>
+      </form>
+    </div>
+  </center>
 </body>
 
 </html>

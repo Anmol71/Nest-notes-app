@@ -18,7 +18,6 @@ export class SharedNotesService {
   ) {
     const shared_with = createSharedNote.shared_with;
     const user_id = typeof user === 'number' ? user : user.id;
-    console.log('Enter Create .....');
     console.log({
       shared_from: user_id,
       shared_with: shared_with,
@@ -33,12 +32,7 @@ export class SharedNotesService {
       })
       .save();
   }
-  // public async sharingNote(
-  //   data: Pick<SharedNoteModel, 'note_id' | 'shared_with'>,
-  //   user_id: number,
-  // ): Promise<SharedNoteModel | string> {
-  //   return this.sharedNoteModel.build().set(data).save();
-  // }
+
   public async notesSharedToMe(user_id: number) {
     return this.sharedNoteModel.scope('WithNoteUser').findAll({
       // attributes: ['note.title', 'note.description', 'note.id'],
@@ -55,22 +49,5 @@ export class SharedNotesService {
         note_id: note_id,
       },
     });
-  }
-
-  findAll() {
-    return `This action returns all sharedNotes`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} sharedNote`;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  update(id: number, updateSharedNoteDto: SharedNoteModel) {
-    return `This action updates a #${id} sharedNote`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} sharedNote`;
   }
 }

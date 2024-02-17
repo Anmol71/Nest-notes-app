@@ -11,7 +11,6 @@ import {
   HttpCode,
   HttpStatus,
   ValidationPipe,
-  UsePipes,
   Redirect,
   ParseIntPipe,
   Query,
@@ -27,8 +26,11 @@ import { CreateSharedNoteDto } from 'src/shared-notes/dtos/create-shared-note.dt
 import { SharedNotesService } from 'src/shared-notes/services/shared-notes.service';
 import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
 import { UserModel } from 'src/databases/models/user.model';
+import { ApiTags } from '@nestjs/swagger';
+import { MapToUserPipe } from 'src/users/pipes/map-to-user.pipe';
 
 @UseGuards(AuthGuard)
+@ApiTags('notes')
 @Controller('notes')
 export class NotesController {
   constructor(
@@ -53,63 +55,26 @@ export class NotesController {
     | { myNotes: NoteModel[]; sharedToMe: SharedNoteModel[] }
     | { myNotes: NoteModel[] }
     | { sharedToMe: SharedNoteModel[] }
+    | { user: UserModel }
   > {
     const sharedToMe: SharedNoteModel[] =
       await this.sharedNotesService.notesSharedToMe(user.id);
     const myNotes: NoteModel[] = await this.notesService.getMyNotes(user.id);
     if (notes === 'all') {
-      return { myNotes, sharedToMe };
+      return { myNotes, sharedToMe, user: user };
     } else if (notes === 'createdByMe') {
-      return { myNotes };
+      return { myNotes, user: user };
     } else if (notes === 'sharedWithMe') {
-      return { sharedToMe };
+      return { sharedToMe, user: user };
     }
-    return { myNotes: myNotes, sharedToMe: sharedToMe };
-  }
-
-  @Get(':noteId/share')
-  @Render('usersList')
-  public async shareWithUsers(
-    @Param('noteId', ParseIntPipe, MapToNotesPipe) note: NoteModel,
-    @AuthUser() users: UserModel,
-  ) {
-    const allUsers: UserModel[] = await this.usersService.findAll();
-    const filteredUsers: UserModel[] = allUsers.filter((user) => {
-      return users.id !== user.id;
-    });
-    return { filteredUsers, note: note.toJSON() };
+    return { myNotes: myNotes, sharedToMe: sharedToMe, user: user };
   }
 
   @Render('createNotes')
+  @UseGuards(AuthGuard)
   @Get('create')
-  public showCreateNote() {
-    return {};
-  }
-
-  @Get(':id/edit')
-  @Render('editNotes')
-  public Note(@Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel) {
-    return { note };
-  }
-
-  @Post()
-  @Redirect('/notes')
-  public create(
-    @AuthUser() user: UserModel,
-    @Body() createNote: CreateNoteDto,
-  ): void {
-    this.notesService.create(createNote, user.id);
-  }
-
-  // ROUTE FOR SHARING THE NOTE.
-  @Post(':noteId/share')
-  @Redirect('/notes')
-  public sharedWithSingleUser(
-    @Param('noteId', ParseIntPipe, MapToNotesPipe) note: NoteModel,
-    @AuthUser() user: UserModel,
-    @Body() sharedNoteDto: CreateSharedNoteDto,
-  ) {
-    this.sharedNotesService.create(sharedNoteDto, user.id, note);
+  public showCreateNote(@AuthUser() authUser: UserModel) {
+    return { user: authUser };
   }
 
   @Get(':id')
@@ -117,9 +82,58 @@ export class NotesController {
     return this.notesService.findAllByUser(user.id);
   }
 
+  @Get(':noteId(\\d+)/share')
+  @Render('usersList')
+  public async shareWithUsers(
+    @Param('noteId', MapToNotesPipe) note: NoteModel,
+    @AuthUser() loginUser: UserModel,
+  ) {
+    const allUsers: UserModel[] = await this.usersService.findAll();
+    const filteredUsers: UserModel[] = allUsers.filter((user) => {
+      return user.id !== loginUser.id;
+    });
+    console.log('allUsers', allUsers);
+    console.log('filteredUsers', filteredUsers);
+    // const sharedWithUser = await this.usersService.findOne(
+    //   sharedNoteDto.shared_with,
+    // );
+    return { filteredUsers, note: note.toJSON(), user: loginUser };
+  }
+
+  @Get(':id/edit')
+  @Render('editNotes')
+  public Note(
+    @Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel,
+    @AuthUser() authUser: UserModel,
+  ) {
+    return { note, user: authUser };
+  }
+
+  @Post()
+  @Redirect('/notes')
+  public create(
+    @AuthUser() user: UserModel,
+    @Body(ValidationPipe) createNote: CreateNoteDto,
+  ): void {
+    this.notesService.create(createNote, user.id);
+  }
+
+  // ROUTE FOR SHARING THE NOTE.
+  @Redirect('/notes')
+  @Post(':noteId(\\d+)/share')
+  public async sharedWithSingleUser(
+    @Param('noteId', MapToNotesPipe) note: NoteModel,
+    @AuthUser() user: UserModel,
+    @Body() sharedNoteDto: CreateSharedNoteDto,
+    @Body('shared_with', MapToUserPipe) sharedWithUser: UserModel,
+  ) {
+    console.log('sharedWithUserrr', sharedWithUser);
+    this.sharedNotesService.create(sharedNoteDto, user.id, note);
+  }
+
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  @UsePipes(ValidationPipe)
+  // @UsePipes(ValidationPipe)
   @Redirect('/notes')
   public editNote(
     @Param('id', ParseIntPipe, MapToNotesPipe) note: NoteModel,

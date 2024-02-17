@@ -17,5 +17,4 @@ export const migrator = new Umzug({
   logger: console,
 });
 
-console.log(process.cwd());
 export type Migration = typeof migrator._types.migration;

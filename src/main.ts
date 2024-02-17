@@ -6,21 +6,19 @@ import { ConfigService } from '@nestjs/config';
 import { useContainer } from 'class-validator';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
+import { ValidationPipe } from '@nestjs/common';
+import { AppClusterService } from './common/services/app-cluster.service';
+import { CommandFactory } from 'nest-commander';
 
 async function bootstrap() {
-  // const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  await CommandFactory.run(AppModule, ['warn', 'error']);
 
-  // const viewsPath = join(__dirname, '../public/views');
-  // app.engine('.hbs', exphbs({ extname: '.hbs', defaultLayout: 'main' }));
-  // app.set('views', viewsPath);
-  // app.set('view engine', '.hbs');
-  // app.setViewEngine('hbs');
-
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.use(cookieParser());
-  app.useStaticAssets(join(__dirname, '..', 'public'));
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.useStaticAssets(join(process.cwd(), 'public'));
+  app.setBaseViewsDir(join(process.cwd(), 'views'));
   app.setViewEngine('hbs');
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT');
@@ -36,4 +34,6 @@ async function bootstrap() {
 
   await app.listen(port);
 }
-bootstrap();
+// bootstrap();
+//Call app-cluster.service.ts here.
+AppClusterService.clusterize(bootstrap);
