@@ -14,7 +14,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  public async signIn(username, pass) {
+  public async signIn(username: string, pass: string) {
     const user: UserModel = await this.usersService.findByUserName(username);
     if (!user) {
       throw new NotFoundException();

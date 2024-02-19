@@ -7,7 +7,7 @@ import { NotesModule } from './notes/notes.module';
 import { SharedNotesModule } from './shared-notes/shared-notes.module';
 import { DatabaseModule } from './databases/database.module';
 import { EnvConfigModule } from './env-config/env-config.module';
-import { LoggerMiddleware } from './common/logger.middleware';
+import { MethodModifierMiddleware } from './common/method-modifier.middleware';
 import { EmailModule } from './email/email.module';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -39,6 +39,6 @@ import { CliCommandsModule } from './cli-commands/cli-commands.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
+    consumer.apply(MethodModifierMiddleware).forRoutes('*');
   }
 }

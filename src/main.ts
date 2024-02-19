@@ -36,4 +36,12 @@ async function bootstrap() {
 }
 // bootstrap();
 //Call app-cluster.service.ts here.
-AppClusterService.clusterize(bootstrap);
+
+async function startInCluster() {
+  const app = await NestFactory.create(AppModule);
+  const clusterService = app.get(AppClusterService);
+  clusterService.clusterize(bootstrap);
+  return app;
+}
+
+startInCluster();
