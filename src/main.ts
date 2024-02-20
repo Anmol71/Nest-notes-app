@@ -8,7 +8,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import { AppClusterService } from './common/services/app-cluster.service';
-import { CommandFactory } from 'nest-commander';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
