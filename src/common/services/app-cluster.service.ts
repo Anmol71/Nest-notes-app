@@ -1,20 +1,18 @@
 import * as cluster from 'node:cluster';
-import * as os from 'node:os';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IClusterConfig } from 'src/env-config/clusterConfig';
 
-const numCPUs = os.cpus().length;
 const clusterManager: cluster.Cluster = cluster as any;
 
 @Injectable()
 export class AppClusterService {
   constructor(private configService: ConfigService) {}
 
-  public clusterize(bootstrapFn: () => Promise<void>): void {
-    const config = this.configService.get<IClusterConfig>('config');
-    console.log(config);
-    const useClustering = config.enable_clustering;
+  public config = this.configService.get<IClusterConfig>('cluster');
+
+  public clusterize(bootstrapFn: () => void): void {
+    const useClustering = this.config.enable_clustering;
     if (useClustering && clusterManager.isPrimary) {
       this.startInWorker();
     } else {
@@ -22,15 +20,15 @@ export class AppClusterService {
     }
   }
 
-  public startInMain(bootstrapFn: () => Promise<void>) {
+  public startInMain(bootstrapFn: () => void) {
     return bootstrapFn();
   }
 
   public startInWorker() {
-    console.log(`Master server started on ${process.pid}`);
-    for (let i = 0; i < numCPUs - 1; i++) {
+    for (let i = 1; i <= this.config.max_workers; i++) {
       clusterManager.fork();
     }
+
     clusterManager.on('exit', (worker) => {
       console.log(`Worker ${worker.process.pid} died. Restarting`);
       clusterManager.fork();

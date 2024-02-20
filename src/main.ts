@@ -12,7 +12,7 @@ import { CommandFactory } from 'nest-commander';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  await CommandFactory.run(AppModule, ['warn', 'error']);
+  // await CommandFactory.run(AppModule, ['warn', 'error']);
 
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
@@ -34,7 +34,6 @@ async function bootstrap() {
 
   await app.listen(port);
 }
-// bootstrap();
 //Call app-cluster.service.ts here.
 
 async function startInCluster() {
