@@ -7,6 +7,7 @@ import { jwtConstants } from './constants';
 import { IsUniqueValidator } from './validations/unique.validation';
 import { HashService } from './services/hash.service';
 import { AuthGuard } from './guards/auth.guard';
+import { LoginService } from './commands/login.service';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { AuthGuard } from './guards/auth.guard';
       signOptions: { expiresIn: '1h' },
     }),
   ],
-  providers: [AuthService, IsUniqueValidator, HashService, AuthGuard],
+  providers: [AuthService, IsUniqueValidator, HashService, AuthGuard, LoginService],
   controllers: [AuthController],
   exports: [AuthService],
 })

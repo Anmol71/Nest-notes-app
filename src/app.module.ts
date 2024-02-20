@@ -14,6 +14,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppClusterService } from './common/services/app-cluster.service';
 import { CliCommandsModule } from './cli-commands/cli-commands.module';
+import { CommandModule } from 'nestjs-command';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { CliCommandsModule } from './cli-commands/cli-commands.module';
       },
     }),
     CliCommandsModule,
+    CommandModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppClusterService],

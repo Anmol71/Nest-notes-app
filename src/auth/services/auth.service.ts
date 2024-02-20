@@ -6,6 +6,7 @@ import {
 import { UsersService } from '../../users/services/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserModel } from 'src/databases/models/user.model';
+// import { jwtConstants } from '../constants';
 
 @Injectable()
 export class AuthService {
@@ -26,5 +27,15 @@ export class AuthService {
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
+  }
+  public async getUserFromToken(token: string) {
+    if (!token) {
+      throw new UnauthorizedException();
+    }
+    const payload: any = await this.jwtService.decode(token, {
+      json: true,
+    });
+    const user: UserModel = await this.usersService.findOne(payload.user_id);
+    return user;
   }
 }
