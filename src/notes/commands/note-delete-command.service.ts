@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { AuthService } from 'src/auth/services/auth.service';
-import { NotesService } from '../services/notes.service';
+import { NotesRepoService } from '../services/notes-repo.service';
 import { Command, Option, Positional } from 'nestjs-command';
 
 @Injectable()
 export class NoteDeleteCommandService {
   constructor(
     private readonly authService: AuthService,
-    private readonly notesService: NotesService,
+    private readonly notesService: NotesRepoService,
   ) {}
 
   @Command({

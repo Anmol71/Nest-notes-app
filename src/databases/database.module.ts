@@ -12,5 +12,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }),
   ],
   providers: [DbConnectionService, ConfigService],
+  exports: [SequelizeModule],
 })
 export class DatabaseModule {}

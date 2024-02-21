@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { AuthService } from 'src/auth/services/auth.service';
-import { NotesService } from '../services/notes.service';
+import { NotesRepoService } from '../services/notes-repo.service';
 import { Command, Option, Positional } from 'nestjs-command';
 
 @Injectable()
 export class NoteEditCommandService {
   constructor(
     private readonly authService: AuthService,
-    private readonly notesService: NotesService,
+    private readonly notesService: NotesRepoService,
   ) {}
 
   @Command({
-    command: 'edit:note <noteId>',
-    describe: 'delete a note',
+    command: 'edit:note <noteId> <title> <description>',
+    describe: 'edit a note',
   })
   async edit(
     @Positional({
@@ -47,8 +47,13 @@ export class NoteEditCommandService {
     })
     token: string,
   ) {
-    console.log('hidd');
-    const user = await this.authService.getUserFromToken(token);
-    await this.notesService.update(user.id, noteId);
+    await this.authService.getUserFromToken(token);
+    const note = await this.notesService.findOne(noteId);
+    console.log('Note', note);
+    await this.notesService.update(note, {
+      title,
+      description,
+    });
+    console.log('Note Edited Succesfully');
   }
 }

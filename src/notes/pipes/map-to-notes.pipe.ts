@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException, PipeTransform } from '@nestjs/common';
-import { NotesService } from '../services/notes.service';
+import { NotesRepoService } from '../services/notes-repo.service';
 import { NoteModel } from 'src/databases/models/note.model';
 
 @Injectable()
 export class MapToNotesPipe implements PipeTransform {
-  constructor(private notesService: NotesService) {}
+  constructor(private notesService: NotesRepoService) {}
 
   public async transform(id: number): Promise<NoteModel> {
     console.log('Map to notes pipe');
