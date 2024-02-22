@@ -11,7 +11,7 @@ export class NoteEditCommandService {
   ) {}
 
   @Command({
-    command: 'edit:note <noteId>',
+    command: 'edit:note <noteId> <title> <description>',
     describe: 'delete a note',
   })
   async edit(
@@ -47,8 +47,9 @@ export class NoteEditCommandService {
     })
     token: string,
   ) {
-    console.log('hidd');
-    const user = await this.authService.getUserFromToken(token);
-    await this.notesService.update(user.id, noteId);
+    await this.authService.getUserFromToken(token);
+    const note = await this.notesService.findOne(noteId);
+    await this.notesService.update(note, { title, description });
+    console.log('Notes edited succesfully');
   }
 }
