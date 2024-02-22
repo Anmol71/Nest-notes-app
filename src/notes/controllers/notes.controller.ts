@@ -15,7 +15,7 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { NotesRepoService } from '../services/notes-repo.service';
+import { NotesService } from '../services/notes.service';
 import { CreateNoteDto } from '../dtos/create-note.dto';
 import { NoteModel } from 'src/databases/models/note.model';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
@@ -34,7 +34,7 @@ import { MapToUserPipe } from 'src/users/pipes/map-to-user.pipe';
 @Controller('notes')
 export class NotesController {
   constructor(
-    private notesService: NotesRepoService,
+    private notesService: NotesService,
     private usersService: UsersService,
     private sharedNotesService: SharedNotesService,
   ) {}

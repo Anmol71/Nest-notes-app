@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { NotesRepoService } from '../services/notes-repo.service';
+import { NotesService } from '../services/notes.service';
 import { AuthService } from 'src/auth/services/auth.service';
 import { Command, Option, Positional } from 'nestjs-command';
 
 @Injectable()
 export class NoteCreateCommandService {
   constructor(
-    private readonly notesService: NotesRepoService,
+    private readonly notesService: NotesService,
     private readonly authService: AuthService,
   ) {}
   @Command({

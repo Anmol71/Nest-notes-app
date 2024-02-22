@@ -15,7 +15,6 @@ import { join } from 'path';
 import { AppClusterService } from './common/services/app-cluster.service';
 import { CliCommandsModule } from './cli-commands/cli-commands.module';
 import { CommandModule } from 'nestjs-command';
-import { PaginateModule } from 'nestjs-sequelize-paginate';
 
 @Module({
   imports: [
@@ -36,7 +35,6 @@ import { PaginateModule } from 'nestjs-sequelize-paginate';
     }),
     CliCommandsModule,
     CommandModule,
-    PaginateModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService, AppClusterService],
