@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { PaginateService } from 'nestjs-sequelize-paginate';
 import { NoteModel } from 'src/databases/models/note.model';
 import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
 import { UserModel } from 'src/databases/models/user.model';
@@ -14,6 +15,7 @@ export class NotesService {
     private sharedNotesService: SharedNotesService,
     private usersService: UsersService,
     private emailService: EmailService,
+    private paginateService: PaginateService,
   ) {}
 
   public create(
@@ -42,11 +44,18 @@ export class NotesService {
       .findAll({ where: { user_id: user_id } });
   }
 
-  public getMyNotes(user: number | UserModel): Promise<NoteModel[]> {
+  public async getMyNotes(
+    page: number = 1,
+    user: number | UserModel,
+  ): Promise<NoteModel[]> {
     const user_id: number = typeof user === 'number' ? user : user.id;
-    console.log('User Id ', user_id);
+    console.log('Page in Service ', page);
+    const offset = (page - 1) * 2;
+    console.log('Offset', offset);
     return this.noteModel.scope(['withUser']).findAll({
       include: [{ model: SharedNoteModel }],
+      offset,
+      limit: 5,
       where: {
         user_id: user_id,
       },

@@ -138,6 +138,55 @@
   </table>
   {{/if}}
 
+  <center>
+
+    <div class="container">
+      <ul class="pagination">
+        <li class="page-item prev"><button class="page-link">Previous</button>
+        </li>
+        <li class="page-item next">
+          {{#if myNotes}}
+            <button class="page-link">Next</button>
+          {{else}}
+          <button class="page-link" disabled>Next</button>
+          {{/if}}
+        </li>
+      </ul>
+
+
+    </div>
+
+  </center>
+
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+
+  console.log("Pagination");
+  var prev = $(".pagination li.prev");
+  var next = $(".pagination li.next");
+
+  const searchParams = new URLSearchParams(window.location.search);
+  let currentPage = Number(searchParams.get('page'));
+  console.log(prev, next)
+  console.log(currentPage)
+  console.log(searchParams)
+  next.click(function () {
+    console.log("Current Page: ", currentPage);
+    if (!currentPage) {
+      currentPage = 1;
+    }
+    window.location.href = `?page=${currentPage + 1}`;
+  });
+
+  prev.click(function () {
+    if (currentPage > 1) {
+      window.location.href = `?page=${currentPage - 1}`;
+    }
+  });
+
+
+
+</script>
 
 </html>

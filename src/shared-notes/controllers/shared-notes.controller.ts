@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { SharedNotesService } from '../services/shared-notes.service';
 
 import { AuthGuard } from 'src/auth/guards/auth.guard';
@@ -15,8 +15,9 @@ export class SharedNotesController {
 
   @Get()
   public async notesSharedToMe(
+    @Query('page') page: number,
     @AuthUser() user: UserModel,
   ): Promise<SharedNoteModel[]> {
-    return this.sharedNotesService.notesSharedToMe(user.id);
+    return this.sharedNotesService.notesSharedToMe(page, user.id);
   }
 }
