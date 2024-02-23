@@ -63,6 +63,16 @@ export class NotesService {
     });
   }
 
+  public async totalNumberNotes(user: number | UserModel) {
+    const user_id: number = typeof user === 'number' ? user : user.id;
+    const notes = await this.noteModel.findAll({
+      where: {
+        user_id: user_id,
+      },
+    });
+    return notes.length;
+  }
+
   public async showMyReceivedNotes(
     note: Pick<NoteModel, 'user_id'>,
   ): Promise<NoteModel[]> {

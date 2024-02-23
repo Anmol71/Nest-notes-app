@@ -45,15 +45,24 @@
         <a class='text-decoration-none text-primary mx-3 ' href='/notes/create'>Create Notes</a>
 
 
-        <a class='text-decoration-none text-primary mx-5' href='/notes?shared=all'>All Notes</a>
+        {{!-- <a class='text-decoration-none text-primary mx-5' href='/notes?shared=all'>All Notes</a> --}}
+        <a>
+          <button type="button" id="buttonId" class="btn btn-outline-primary all">All Notes</button>
+        </a>
 
-        <a class='text-decoration-none text-primary mx-5' href='/notes?shared=createdByMe'>CreatedByMe Notes</a>
+        {{!-- <a class='text-decoration-none text-primary mx-5' href='/notes?shared=createdByMe'>CreatedByMe Notes</a>
+        --}}
+        <a>
+          <button type="button" id="buttonId" class="btn btn-outline-primary createdByMe mx-2">Created By Me
+            Notes</button>
 
-        <a class='text-decoration-none text-primary mx-5' href='/notes?shared=sharedWithMe'>SharedWithMe Notes</a>
-        </ul>
-        <form action="/auth/logout" method="post">
-          <input type="submit" class="btn btn-secondary end-0 top-0 position-absolute mx-3" value="Log Out">
-        </form>
+          <a>
+            <button type="button" id="buttonId" class="btn btn-outline-primary sharedWithMe">Shared With Me</button>
+          </a>
+          </ul>
+          <form action="/auth/logout" method="post">
+            <input type="submit" class="btn btn-secondary end-0 top-0 position-absolute mx-3" value="Log Out">
+          </form>
 
       </div>
     </div>
@@ -146,7 +155,7 @@
         </li>
         <li class="page-item next">
           {{#if myNotes}}
-            <button class="page-link">Next</button>
+          <button class="page-link">Next</button>
           {{else}}
           <button class="page-link" disabled>Next</button>
           {{/if}}
@@ -160,6 +169,7 @@
 
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.3.0/math.min.js"></script>
 <script>
 
   console.log("Pagination");
@@ -167,22 +177,42 @@
   var next = $(".pagination li.next");
 
   const searchParams = new URLSearchParams(window.location.search);
+  const url = new URL(window.location.href);
   let currentPage = Number(searchParams.get('page'));
+  const numberOfPages = Math.ceil({{ myNotesCount }}/3);
   console.log(prev, next)
   console.log(currentPage)
   console.log(searchParams)
+  console.log("url.href", `${url.href}`);
   next.click(function () {
-    console.log("Current Page: ", currentPage);
-    if (!currentPage) {
-      currentPage = 1;
+
+    if (currentPage < numberOfPages) {
+      url.searchParams.set('page', currentPage + 1);
+      window.location.href = `${url.href}`;
     }
-    window.location.href = `?page=${currentPage + 1}`;
-  });
+  })
 
   prev.click(function () {
-    if (currentPage > 1) {
-      window.location.href = `?page=${currentPage - 1}`;
+    if (currentPage > 0) {
+      url.searchParams.set('page', currentPage - 1)
+      window.location.href = `${url.href}`;
     }
+  });
+
+  var createdByMe = $(".createdByMe");
+  createdByMe.click(function (share) {
+    url.searchParams.set('shared', 'createdByMe');
+    window.location.href = `${url.href}`;
+  });
+  var sharedWithMe = $(".sharedWithMe");
+  sharedWithMe.click(function (share) {
+    url.searchParams.set('shared', 'sharedWithMe');
+    window.location.href = `${url.href}`;
+  });
+  var all = $(".all");
+  all.click(function (share) {
+    url.searchParams.set('shared', 'all');
+    window.location.href = `${url.href}`;
   });
 
 

@@ -38,14 +38,6 @@ export class NotesController {
     private usersService: UsersService,
     private sharedNotesService: SharedNotesService,
   ) {}
-  // @Get()
-  // public async getMyNotes(
-  //   @Query('page') page: number,
-  //   @AuthUser() user: UserModel,
-  // ): Promise<{ notes: NoteModel[] }> {
-  //   const notes = await this.notesService.getMyNotes(page, user.id);
-  //   return { notes };
-  // }
 
   @Render('notes')
   @Get()
@@ -53,12 +45,7 @@ export class NotesController {
     @AuthUser() user: UserModel,
     @Query('page') page: number,
     @Query('shared') notes: 'all' | 'createdByMe' | 'sharedWithMe',
-  ): Promise<
-    | { myNotes: NoteModel[]; sharedToMe: SharedNoteModel[] }
-    | { myNotes: NoteModel[] }
-    | { sharedToMe: SharedNoteModel[] }
-    | { user: UserModel }
-  > {
+  ): Promise<object> {
     if (isNaN(page)) {
       page = 1;
     }
@@ -69,15 +56,22 @@ export class NotesController {
       page,
       user.id,
     );
+    const myNotesCount = await this.notesService.totalNumberNotes(user.id);
     // console.log('Get My Notes', myNotes);
+    console.log('Length of notes ', myNotesCount);
     if (notes === 'all') {
-      return { myNotes, sharedToMe, user: user };
+      return { myNotes, sharedToMe, user: user, myNotesCount };
     } else if (notes === 'createdByMe') {
-      return { myNotes, user: user };
+      return { myNotes, user: user, myNotesCount };
     } else if (notes === 'sharedWithMe') {
-      return { sharedToMe, user: user };
+      return { sharedToMe, user: user, myNotesCount };
     }
-    return { myNotes: myNotes, sharedToMe: sharedToMe, user: user };
+    return {
+      myNotes: myNotes,
+      sharedToMe: sharedToMe,
+      user: user,
+      myNotesCount: myNotesCount,
+    };
   }
 
   @Render('createNotes')
