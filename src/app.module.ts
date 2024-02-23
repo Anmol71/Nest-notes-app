@@ -7,13 +7,15 @@ import { NotesModule } from './notes/notes.module';
 import { SharedNotesModule } from './shared-notes/shared-notes.module';
 import { DatabaseModule } from './databases/database.module';
 import { EnvConfigModule } from './env-config/env-config.module';
-import { LoggerMiddleware } from './common/logger.middleware';
+import { MethodModifierMiddleware } from './common/method-modifier.middleware';
 import { EmailModule } from './email/email.module';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppClusterService } from './common/services/app-cluster.service';
 import { CliCommandsModule } from './cli-commands/cli-commands.module';
+import { CommandModule } from 'nestjs-command';
+import { PaginateModule } from 'nestjs-sequelize-paginate';
 
 @Module({
   imports: [
@@ -33,12 +35,14 @@ import { CliCommandsModule } from './cli-commands/cli-commands.module';
       },
     }),
     CliCommandsModule,
+    CommandModule,
+    PaginateModule.forRoot({ url: 'http://localhost:3000' }),
   ],
   controllers: [AppController],
   providers: [AppService, AppClusterService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
+    consumer.apply(MethodModifierMiddleware).forRoutes('*');
   }
 }

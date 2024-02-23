@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { PaginateOptions, PaginateService } from 'nestjs-sequelize-paginate';
 import { NoteModel } from 'src/databases/models/note.model';
 import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
 import { UserModel } from 'src/databases/models/user.model';
@@ -14,6 +15,7 @@ export class NotesService {
     private sharedNotesService: SharedNotesService,
     private usersService: UsersService,
     private emailService: EmailService,
+    private paginateService: PaginateService,
   ) {}
 
   public create(
@@ -42,16 +44,54 @@ export class NotesService {
       .findAll({ where: { user_id: user_id } });
   }
 
-  public getMyNotes(user: number | UserModel): Promise<NoteModel[]> {
+  // public async getMyNotes(
+  //   page: number = 1,
+  //   user: number | UserModel,
+  // ): Promise<NoteModel[]> {
+  //   const user_id: number = typeof user === 'number' ? user : user.id;
+  //   console.log('Page in Service ', page);
+  //   const offset = (page - 1) * 3;
+  //   console.log('Offset', offset);
+  //   return this.noteModel.scope(['withUser']).findAll({
+  //     include: [{ model: SharedNoteModel }],
+  //     offset,
+  //     limit: 3,
+  //     where: {
+  //       user_id: user_id,
+  //     },
+  //     // raw: true,
+  //   });
+  // }
+
+  public async getMyNotes(
+    page: number,
+    user: number | UserModel,
+  ): Promise<any> {
     const user_id: number = typeof user === 'number' ? user : user.id;
-    console.log('User Id ', user_id);
-    return this.noteModel.scope(['withUser']).findAll({
-      include: [{ model: SharedNoteModel }],
+    // console.log(options, "options")
+    const paginate = await this.paginateService.findAllPaginate({
+      page: 1,
+      offset: 5,
+      model: NoteModel,
+      // path: '/notes',
+    });
+    // const note = await this.noteModel.scope(['withUser']).findAll({
+    //   include: [{ model: SharedNoteModel }],
+    //   where: {
+    //     user_id: user_id,
+    //   },
+    // });
+    return paginate;
+  }
+
+  public async totalNumberNotes(user: number | UserModel) {
+    const user_id: number = typeof user === 'number' ? user : user.id;
+    const notes = await this.noteModel.findAll({
       where: {
         user_id: user_id,
       },
-      // raw: true,
     });
+    return notes.length;
   }
 
   public async showMyReceivedNotes(

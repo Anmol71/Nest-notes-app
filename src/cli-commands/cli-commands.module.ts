@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { RouteListService } from './commands/route-list/route-list.service';
 
 @Module({
-  providers: [RouteListService],
+  providers: [RouteListService, Logger],
 })
 export class CliCommandsModule {}
