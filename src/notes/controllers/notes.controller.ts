@@ -28,6 +28,10 @@ import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
 import { UserModel } from 'src/databases/models/user.model';
 import { ApiTags } from '@nestjs/swagger';
 import { MapToUserPipe } from 'src/users/pipes/map-to-user.pipe';
+import {
+  PaginateQuery,
+  PaginateQueryInterface,
+} from 'nestjs-sequelize-paginate';
 
 @UseGuards(AuthGuard)
 @ApiTags('notes')
@@ -39,11 +43,49 @@ export class NotesController {
     private sharedNotesService: SharedNotesService,
   ) {}
 
+  // @Render('notes')
+  // @Get()
+  // public async getNotes(
+  //   @AuthUser() user: UserModel,
+  //   @Query('page') page: number,
+  //   @Query('shared') notes: 'all' | 'createdByMe' | 'sharedWithMe',
+  // ): Promise<object> {
+  //   if (isNaN(page)) {
+  //     page = 1;
+  //   }
+  //   const sharedToMe: SharedNoteModel[] =
+  //     await this.sharedNotesService.notesSharedToMe(user.id);
+  //   console.log('page', page);
+  //   const myNotes: NoteModel[] = await this.notesService.getMyNotes(
+  //     page,
+  //     user.id,
+  //   );
+  //   const myNotesCount = await this.notesService.totalNumberNotes(user.id);
+  //   // console.log('Get My Notes', myNotes);
+  //   console.log('Length of notes ', myNotesCount);
+  //   console.log('MyNotes', myNotes.length);
+  //   if (notes === 'all') {
+  //     return { myNotes, sharedToMe, user: user, myNotesCount };
+  //   } else if (notes === 'createdByMe') {
+  //     return { myNotes, user: user, myNotesCount };
+  //   } else if (notes === 'sharedWithMe') {
+  //     return { sharedToMe, user: user, myNotesCount };
+  //   }
+  //   return {
+  //     myNotes: myNotes,
+  //     sharedToMe: sharedToMe,
+  //     user: user,
+  //     myNotesCount: myNotesCount,
+  //   };
+  // }
+
   @Render('notes')
   @Get()
   public async getNotes(
+    // @PaginateQuery() paginateQuery: PaginateQueryInterface,
     @AuthUser() user: UserModel,
-    @Query('page') page: number,
+    @Query('page') page: number = 1,
+    @Query('offset') offset: number = 5,
     @Query('shared') notes: 'all' | 'createdByMe' | 'sharedWithMe',
   ): Promise<object> {
     if (isNaN(page)) {
@@ -52,14 +94,15 @@ export class NotesController {
     const sharedToMe: SharedNoteModel[] =
       await this.sharedNotesService.notesSharedToMe(user.id);
     console.log('page', page);
-    const myNotes: NoteModel[] = await this.notesService.getMyNotes(
-      page,
+    const myNotes = await this.notesService.getMyNotes(
+      { page, offset },
       user.id,
     );
     const myNotesCount = await this.notesService.totalNumberNotes(user.id);
     // console.log('Get My Notes', myNotes);
     console.log('Length of notes ', myNotesCount);
     console.log('MyNotes', myNotes.length);
+    console.log(myNotes, 'mynotes');
     if (notes === 'all') {
       return { myNotes, sharedToMe, user: user, myNotesCount };
     } else if (notes === 'createdByMe') {
@@ -115,7 +158,7 @@ export class NotesController {
   }
 
   @Post()
-  @Redirect('/notes')
+  @Redirect('/notes?page=1')
   public create(
     @AuthUser() user: UserModel,
     @Body(ValidationPipe) createNote: CreateNoteDto,

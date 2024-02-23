@@ -36,7 +36,7 @@ import { PaginateModule } from 'nestjs-sequelize-paginate';
     }),
     CliCommandsModule,
     CommandModule,
-    PaginateModule.forRoot({}),
+    PaginateModule.forRoot({ url: 'http://localhost:3000' }),
   ],
   controllers: [AppController],
   providers: [AppService, AppClusterService],

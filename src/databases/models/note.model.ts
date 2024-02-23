@@ -2,6 +2,7 @@ import {
   AutoIncrement,
   BelongsTo,
   Column,
+  DefaultScope,
   ForeignKey,
   HasMany,
   Model,
@@ -12,9 +13,9 @@ import {
 import { UserModel } from './user.model';
 import { SharedNoteModel } from './shared-notes.model';
 
-// @DefaultScope(()=> ({
-//   include: UserModel,
-// }))
+@DefaultScope(()=> ({
+  include: [UserModel],
+}))
 @Scopes(() => ({
   withUser: {
     include: UserModel,
