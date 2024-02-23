@@ -50,12 +50,12 @@ export class NotesService {
   ): Promise<NoteModel[]> {
     const user_id: number = typeof user === 'number' ? user : user.id;
     console.log('Page in Service ', page);
-    const offset = (page - 1) * 2;
+    const offset = (page - 1) * 3;
     console.log('Offset', offset);
     return this.noteModel.scope(['withUser']).findAll({
       include: [{ model: SharedNoteModel }],
       offset,
-      limit: 5,
+      limit: 3,
       where: {
         user_id: user_id,
       },

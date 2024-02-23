@@ -50,7 +50,7 @@ export class NotesController {
       page = 1;
     }
     const sharedToMe: SharedNoteModel[] =
-      await this.sharedNotesService.notesSharedToMe(page, user.id);
+      await this.sharedNotesService.notesSharedToMe(user.id);
     console.log('page', page);
     const myNotes: NoteModel[] = await this.notesService.getMyNotes(
       page,
@@ -59,6 +59,7 @@ export class NotesController {
     const myNotesCount = await this.notesService.totalNumberNotes(user.id);
     // console.log('Get My Notes', myNotes);
     console.log('Length of notes ', myNotesCount);
+    console.log('MyNotes', myNotes.length);
     if (notes === 'all') {
       return { myNotes, sharedToMe, user: user, myNotesCount };
     } else if (notes === 'createdByMe') {

@@ -18,6 +18,6 @@ export class SharedNotesController {
     @Query('page') page: number,
     @AuthUser() user: UserModel,
   ): Promise<SharedNoteModel[]> {
-    return this.sharedNotesService.notesSharedToMe(page, user.id);
+    return this.sharedNotesService.notesSharedToMe(user.id);
   }
 }

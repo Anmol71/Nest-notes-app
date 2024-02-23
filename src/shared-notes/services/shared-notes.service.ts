@@ -33,12 +33,9 @@ export class SharedNotesService {
       .save();
   }
 
-  public async notesSharedToMe(page: number = 1, user_id: number) {
-    const offset = (page - 1) * 2;
+  public async notesSharedToMe(user_id: number) {
     return this.sharedNoteModel.scope('WithNoteUser').findAll({
       // attributes: ['note.title', 'note.description', 'note.id'],
-      offset,
-      limit: 5,
       where: {
         shared_with: user_id,
       },

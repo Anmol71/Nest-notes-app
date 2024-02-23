@@ -25,6 +25,10 @@
     .top {
       margin-top: 58px;
     }
+
+    .container {
+      margin-left: 43%;
+    }
   </style>
 </head>
 
@@ -66,8 +70,13 @@
 
       </div>
     </div>
-
   </nav>
+
+  <form class="d-flex" role="search">
+    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>
+
 
   {{#if myNotes}}
   <center>
@@ -115,7 +124,24 @@
       {{/each}}
     </tbody>
   </table>
+  <div class="container mb-5">
+    <ul class="pagination">
+      <li class="page-item prev"><button class="page-link">Previous</button>
+      </li>
+      <li class="page-item next">
+        {{#if myNotes}}
+        <button class="page-link">Next</button>
+        {{else}}
+        <button class="page-link" disabled>Next</button>
+        {{/if}}
+      </li>
+    </ul>
+
+
+  </div>
   {{/if}}
+
+
 
   {{#if sharedToMe}}
   <center>
@@ -147,25 +173,7 @@
   </table>
   {{/if}}
 
-  <center>
 
-    <div class="container">
-      <ul class="pagination">
-        <li class="page-item prev"><button class="page-link">Previous</button>
-        </li>
-        <li class="page-item next">
-          {{#if myNotes}}
-          <button class="page-link">Next</button>
-          {{else}}
-          <button class="page-link" disabled>Next</button>
-          {{/if}}
-        </li>
-      </ul>
-
-
-    </div>
-
-  </center>
 
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -193,7 +201,7 @@
   })
 
   prev.click(function () {
-    if (currentPage > 0) {
+    if (currentPage > 1) {
       url.searchParams.set('page', currentPage - 1)
       window.location.href = `${url.href}`;
     }
