@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { PaginateOptions, PaginateService } from 'nestjs-sequelize-paginate';
+import { PaginateService } from 'nestjs-sequelize-paginate';
+import { Op } from 'sequelize';
 import { NoteModel } from 'src/databases/models/note.model';
 import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
 import { UserModel } from 'src/databases/models/user.model';
@@ -44,46 +45,47 @@ export class NotesService {
       .findAll({ where: { user_id: user_id } });
   }
 
-  // public async getMyNotes(
-  //   page: number = 1,
-  //   user: number | UserModel,
-  // ): Promise<NoteModel[]> {
-  //   const user_id: number = typeof user === 'number' ? user : user.id;
-  //   console.log('Page in Service ', page);
-  //   const offset = (page - 1) * 3;
-  //   console.log('Offset', offset);
-  //   return this.noteModel.scope(['withUser']).findAll({
-  //     include: [{ model: SharedNoteModel }],
-  //     offset,
-  //     limit: 3,
-  //     where: {
-  //       user_id: user_id,
-  //     },
-  //     // raw: true,
-  //   });
-  // }
-
   public async getMyNotes(
+    page: number = 1,
     user: number | UserModel,
-    paginateOptions: PaginateOptions = {
-      page: 1,
-      offset: 5,
-    },
-  ): Promise<any> {
-    // const user_id = typeof user === 'number' ? user : user.id;
-    paginateOptions.model = this.noteModel.scope([
-      { method: ['onlyUsersNotes', user] },
-    ]);
-    const paginate =
-      await this.paginateService.findAllPaginate(paginateOptions);
-    // const note = await this.noteModel.scope(['withUser']).findAll({
-    //   include: [{ model: SharedNoteModel }],
-    //   where: {
-    //     user_id: user_id,
-    //   },
-    // });
-    return paginate;
+  ): Promise<NoteModel[]> {
+    const user_id: number = typeof user === 'number' ? user : user.id;
+    console.log('Page in Service ', page);
+    const offset = (page - 1) * 3;
+    console.log('Offset', offset);
+    return this.noteModel.scope(['withUser']).findAll({
+      include: [{ model: SharedNoteModel }],
+      offset,
+      limit: 3,
+      where: {
+        user_id: user_id,
+      },
+      // raw: true,
+    });
   }
+
+  // public async getMyNotes(
+  //   user: number | UserModel,
+  //   paginateOptions: PaginateOptions = {
+  //     page: 1,
+  //     offset: 5,
+  //   },
+  // ): Promise<any> {
+  //   // const user_id = typeof user === 'number' ? user : user.id;
+  //   // paginateOptions.model = this.noteModel.scope([
+  //   //   { method: ['onlyUsersNotes', user] },
+  //   // ]);
+  //   paginateOptions.model = this.noteModel.scope(['WithSharedUser']);
+  //   const paginate =
+  //     await this.paginateService.findAllPaginate(paginateOptions);
+  //   // const note = await this.noteModel.scope(['withUser']).findAll({
+  //   //   include: [{ model: SharedNoteModel }],
+  //   //   where: {
+  //   //     user_id: user_id,
+  //   //   },
+  //   // });
+  //   return paginate;
+  // }
 
   public async totalNumberNotes(user: number | UserModel) {
     const user_id: number = typeof user === 'number' ? user : user.id;
@@ -164,5 +166,18 @@ export class NotesService {
         },
       });
     return sharedUser;
+  }
+
+  public async searchNotes(searchText: string, user: number | UserModel) {
+    const user_id: number = typeof user === 'number' ? user : user.id;
+    const notes = await this.noteModel.findAll({
+      where: {
+        user_id: user_id,
+        title: { [Op.like]: `%${searchText}%` },
+        // description: { [Op.like]: `%${searchText}%` },
+      },
+    });
+    console.log('Notes', notes, 'SearchNotes');
+    return notes;
   }
 }

@@ -72,11 +72,11 @@
     </div>
   </nav>
 
-  <form class="d-flex" role="search">
-    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success" type="submit">Search</button>
+  <form class="d-flex" action="/notes?search" role="search" method="get">
+    <input class="form-control me-2 " type="search" placeholder="Search" aria-label="Search" name="search"
+      value="{{search}}">
+    <button class="btn btn-outline-success search" id="searchBtn" type="submit">Search</button>
   </form>
-
 
   {{#if myNotes}}
   <center>
@@ -95,7 +95,7 @@
       </tr>
     </thead>
     <tbody>
-      {{#each myNotes.items}}
+      {{#each myNotes}}
       <tr>
         <th scope='row'>{{this.id}}</th>
         <td>{{this.title}}</td>
@@ -222,6 +222,17 @@
     url.searchParams.set('shared', 'all');
     window.location.href = `${url.href}`;
   });
+
+  var search = $(".search");
+
+
+  search.click("btn",
+    function () {
+      url.searchParams.set('search', search.val());
+      window.location.href = `${url.href}`;
+
+    }
+  );
 
 
 
