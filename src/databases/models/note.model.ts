@@ -20,11 +20,11 @@ import { SharedNoteModel } from './shared-notes.model';
   withUser: {
     include: UserModel,
   },
-  // onlyUsersNotes: (user: UserModel) => ({
-  //   where: {
-  //     user_id: user.id,
-  //   },
-  // }),
+  onlyUsersNotes: (user: UserModel) => ({
+    where: {
+      user_id: user.id,
+    },
+  }),
   WithNote: {
     include: NoteModel,
   },
