@@ -16,6 +16,7 @@ import { AppClusterService } from './common/services/app-cluster.service';
 import { CliCommandsModule } from './cli-commands/cli-commands.module';
 import { CommandModule } from 'nestjs-command';
 import { PaginateModule } from 'nestjs-sequelize-paginate';
+import { PaginateOverwriteModule } from './paginate-overwrite/paginate-overwrite.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { PaginateModule } from 'nestjs-sequelize-paginate';
     CliCommandsModule,
     CommandModule,
     PaginateModule.forRoot({ url: 'http://localhost:3000' }),
+    PaginateOverwriteModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppClusterService],
