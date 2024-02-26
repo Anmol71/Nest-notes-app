@@ -28,10 +28,6 @@ import { SharedNoteModel } from 'src/databases/models/shared-notes.model';
 import { UserModel } from 'src/databases/models/user.model';
 import { ApiTags } from '@nestjs/swagger';
 import { MapToUserPipe } from 'src/users/pipes/map-to-user.pipe';
-import {
-  PaginateQuery,
-  PaginateQueryInterface,
-} from 'nestjs-sequelize-paginate';
 
 @UseGuards(AuthGuard)
 @ApiTags('notes')
@@ -94,15 +90,15 @@ export class NotesController {
     const sharedToMe: SharedNoteModel[] =
       await this.sharedNotesService.notesSharedToMe(user.id);
     console.log('page', page);
-    const myNotes = await this.notesService.getMyNotes(
-      { page, offset },
-      user.id,
-    );
+    const myNotes = await this.notesService.getMyNotes(user, {
+      page,
+      offset,
+    });
     const myNotesCount = await this.notesService.totalNumberNotes(user.id);
     // console.log('Get My Notes', myNotes);
     console.log('Length of notes ', myNotesCount);
-    console.log('MyNotes', myNotes.length);
     console.log(myNotes, 'mynotes');
+    console.log(myNotes.items, 'mynotes');
     if (notes === 'all') {
       return { myNotes, sharedToMe, user: user, myNotesCount };
     } else if (notes === 'createdByMe') {

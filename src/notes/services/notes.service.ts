@@ -64,17 +64,18 @@ export class NotesService {
   // }
 
   public async getMyNotes(
-    page: number,
     user: number | UserModel,
-  ): Promise<any> {
-    const user_id: number = typeof user === 'number' ? user : user.id;
-    // console.log(options, "options")
-    const paginate = await this.paginateService.findAllPaginate({
+    paginateOptions: PaginateOptions = {
       page: 1,
       offset: 5,
-      model: NoteModel,
-      // path: '/notes',
-    });
+    },
+  ): Promise<any> {
+    // const user_id = typeof user === 'number' ? user : user.id;
+    paginateOptions.model = this.noteModel.scope([
+      { method: ['onlyUsersNotes', user] },
+    ]);
+    const paginate =
+      await this.paginateService.findAllPaginate(paginateOptions);
     // const note = await this.noteModel.scope(['withUser']).findAll({
     //   include: [{ model: SharedNoteModel }],
     //   where: {
