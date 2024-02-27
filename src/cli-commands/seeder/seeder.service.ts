@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Argv, Command, Option } from 'nestjs-command';
+import { Argv, Command, Option, Positional } from 'nestjs-command';
 import { ModuleRef } from '@nestjs/core';
 import { Seeder, SeederConstruct } from '../seeders/seeder';
+import { UsersService } from 'src/users/services/users.service';
 interface ToSeedActions {
   all: boolean;
 }
@@ -17,15 +18,29 @@ export class SeederService {
   constructor(
     private readonly moduleRef: ModuleRef,
     private readonly log: Logger,
+    private readonly userService: UsersService,
   ) {}
 
   static SeedMaps: SeederConstruct[] = [];
 
   @Command({
-    command: 'seeder:seed',
+    command: 'seeder:seed <username> <password>',
     describe: 'Seed database',
   })
   public async seed(
+    @Positional({
+      name: 'username',
+      describe: 'the username',
+      type: 'string',
+    })
+    username: string,
+
+    @Positional({
+      name: 'password',
+      describe: 'the password',
+      type: 'string',
+    })
+    password: string,
     @Option({
       name: 'all',
       type: 'boolean',
@@ -36,6 +51,12 @@ export class SeederService {
     @Argv()
     argv: ToSeedActions,
   ) {
+    await this.userService.create({
+      username,
+      password,
+      // email
+    });
+    console.log('Super Admin Seed Succesfully');
     this.attachSeedersAsPerInputs(argv);
     for (const seeder of SeederService.SeedMaps) {
       this.log.log(`Seeding for ${seeder.name}`, 'Seeder');
