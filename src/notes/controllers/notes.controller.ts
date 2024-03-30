@@ -140,7 +140,7 @@ export class NotesController {
     const filteredUsers: UserModel[] = allUsers.filter((user) => {
       return user.id !== loginUser.id;
     });
-    console.log('allUsers', allUsers);
+    console.log('allUsers', allUsers); 
     console.log('filteredUsers', filteredUsers);
     // const sharedWithUser = await this.usersService.findOne(
     //   sharedNoteDto.shared_with,
