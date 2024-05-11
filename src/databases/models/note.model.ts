@@ -13,13 +13,18 @@ import {
 import { UserModel } from './user.model';
 import { SharedNoteModel } from './shared-notes.model';
 
-@DefaultScope(()=> ({
+@DefaultScope(() => ({
   include: [UserModel],
 }))
 @Scopes(() => ({
   withUser: {
     include: UserModel,
   },
+  onlyUsersNotes: (user: UserModel) => ({
+    where: {
+      user_id: user.id,
+    },
+  }),
   WithNote: {
     include: NoteModel,
   },
